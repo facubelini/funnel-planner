@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planificador de Funnel — Objetivo 2026</title>
+<style>
+  :root{
+    --ground:#f6f6f3;
+    --surface:#ffffff;
+    --surface-2:#fbfbf9;
+    --ink:#15171c;
+    --ink-2:#3d424d;
+    --muted:#767b86;
+    --line:#e5e5e0;
+    --line-2:#efefea;
+    --accent:#2f5fd8;
+    --accent-soft:#eaf0fe;
+    --good:#0f7a48;
+    --good-soft:#e8f5ee;
+    --warn:#a25708;
+    --warn-soft:#fdf1e0;
+    --bad:#b32d24;
+    --bad-soft:#fceceb;
+    --radius:10px;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--ground);color:var(--ink);
+    font-family:var(--sans);font-size:14px;line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+
+  /* ---------- shell ---------- */
+  .wrap{max-width:1280px;margin:0 auto;padding:0 24px 80px}
+  header.top{padding:36px 0 22px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  h1{margin:8px 0 6px;font-size:27px;line-height:1.2;letter-spacing:-.02em;font-weight:650}
+  .sub{color:var(--ink-2);max-width:64ch;margin:0}
+  .sub b{font-weight:600;color:var(--ink)}
+
+  /* ---------- presets ---------- */
+  .presets{display:flex;flex-wrap:wrap;gap:7px;margin:22px 0 0}
+  .presets .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;align-self:center;margin-right:4px}
+  .chip{
+    appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);
+    padding:6px 12px;border-radius:100px;font:inherit;font-size:12.5px;font-weight:500;cursor:pointer;
+    transition:border-color .13s,background .13s,color .13s;
+  }
+  .chip:hover{border-color:#c9c9c2;color:var(--ink)}
+  .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+
+  /* ---------- layout ---------- */
+  .grid{display:grid;grid-template-columns:395px minmax(0,1fr);gap:26px;margin-top:26px;align-items:start}
+  @media (max-width:1020px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+  .card + .card{margin-top:18px}
+  .card > h2{
+    margin:0;padding:14px 18px;font-size:12px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--muted);font-weight:650;border-bottom:1px solid var(--line-2);
+  }
+  .card .body{padding:16px 18px}
+
+  /* ---------- mix rows ---------- */
+  .svc{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line-2)}
+  .svc:last-of-type{border-bottom:0}
+  .svc .name{font-weight:550;font-size:13.5px}
+  .svc .price{display:flex;align-items:baseline;gap:3px;color:var(--muted);font-size:12px;margin-top:2px}
+  .svc .price input{
+    width:62px;border:0;border-bottom:1px dashed #cfcfc8;background:none;font:inherit;font-size:12px;
+    color:var(--muted);padding:0 0 1px;text-align:right;font-variant-numeric:tabular-nums;
+  }
+  .svc .price input:focus{outline:0;border-bottom-color:var(--accent);color:var(--accent)}
+  .stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface-2)}
+  .stepper button{
+    width:30px;height:32px;border:0;background:none;font:inherit;font-size:16px;line-height:1;
+    color:var(--ink-2);cursor:pointer;transition:background .12s;
+  }
+  .stepper button:hover{background:#ecece6}
+  .stepper button:active{background:#e2e2da}
+  .stepper input{
+    width:44px;height:32px;border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);
+    background:var(--surface);text-align:center;font:inherit;font-weight:600;font-variant-numeric:tabular-nums;
+  }
+  .stepper input:focus{outline:0;background:var(--accent-soft)}
+  .svc.zero .name,.svc.zero .price{opacity:.55}
+
+  .mixfoot{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+  .mixfoot .k{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+  .mixfoot .v{font-size:20px;font-weight:650;letter-spacing:-.01em}
+  #gap{margin-top:9px;font-size:12.5px;padding:7px 11px;border-radius:7px;font-weight:550}
+  #gap.ok{background:var(--good-soft);color:var(--good)}
+  #gap.under{background:var(--warn-soft);color:var(--warn)}
+  #gap.over{background:var(--accent-soft);color:var(--accent)}
+
+  /* ---------- assumptions ---------- */
+  .field{margin-bottom:17px}
+  .field:last-child{margin-bottom:2px}
+  .field .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:10px}
+  .field label{font-size:12.5px;font-weight:550;color:var(--ink-2)}
+  .field .val{font-size:13px;font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .field .base{font-size:11px;color:var(--muted);margin-top:5px}
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:4px;
+    background:linear-gradient(to right,var(--accent) var(--pct,0%),var(--line) var(--pct,0%));
+    outline:0;margin:0;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#fff;
+    border:2px solid var(--accent);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.16);
+  }
+  input[type=range]::-moz-range-thumb{
+    width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--accent);cursor:pointer;
+  }
+  .txtfield{display:flex;align-items:center;gap:8px}
+  .txtfield input[type=number]{
+    width:100%;border:1px solid var(--line);border-radius:7px;padding:7px 10px;font:inherit;
+    font-variant-numeric:tabular-nums;background:var(--surface-2);
+  }
+  .txtfield input[type=number]:focus{outline:0;border-color:var(--accent);background:#fff}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+  /* ---------- KPIs ---------- */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-2);border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
+  @media (max-width:720px){.kpis{grid-template-columns:1fr 1fr}}
+  .kpi{background:var(--surface);padding:16px 17px}
+  .kpi .k{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:650}
+  .kpi .v{font-size:28px;font-weight:650;letter-spacing:-.025em;margin-top:5px;line-height:1.05}
+  .kpi .d{font-size:11.5px;color:var(--muted);margin-top:4px}
+  .kpi .d.up{color:var(--good)}
+  .kpi .d.dn{color:var(--bad)}
+
+  /* ---------- funnel ---------- */
+  .stage{padding:13px 0;border-bottom:1px solid var(--line-2)}
+  .stage:last-child{border-bottom:0;padding-bottom:2px}
+  .stage .row1{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;gap:12px}
+  .stage .nm{font-size:13px;font-weight:600}
+  .stage .nm span{font-weight:400;color:var(--muted);font-size:12px;margin-left:7px}
+  .stage .qty{font-size:19px;font-weight:650;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+  .bar{height:9px;border-radius:5px;background:var(--line-2);overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:5px;background:var(--accent);transition:width .28s cubic-bezier(.4,0,.2,1)}
+  .stage:nth-child(2) .bar i{background:#5a83e4}
+  .stage:nth-child(3) .bar i{background:#8aa8ee}
+  .stage .meta{display:flex;gap:14px;margin-top:7px;font-size:11.5px;color:var(--muted);flex-wrap:wrap}
+  .stage .meta b{color:var(--ink-2);font-weight:600}
+
+  /* ---------- tables ---------- */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{
+    text-align:right;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+    font-weight:650;padding:0 0 9px;border-bottom:1px solid var(--line);
+  }
+  th:first-child{text-align:left}
+  td{padding:9px 0;border-bottom:1px solid var(--line-2);text-align:right;font-variant-numeric:tabular-nums}
+  td:first-child{text-align:left;font-variant-numeric:normal}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr.dim td{color:var(--muted)}
+  .pill{display:inline-block;padding:2px 8px;border-radius:100px;font-size:11.5px;font-weight:650}
+  .pill.g{background:var(--good-soft);color:var(--good)}
+  .pill.w{background:var(--warn-soft);color:var(--warn)}
+  .pill.b{background:var(--bad-soft);color:var(--bad)}
+
+  .sens td{padding:8px 6px;border:1px solid var(--surface);border-bottom:1px solid var(--surface)}
+  .sens td.hot{background:var(--bad-soft);color:var(--bad);font-weight:600}
+  .sens td.mid{background:var(--warn-soft);color:var(--warn)}
+  .sens td.cool{background:var(--good-soft);color:var(--good);font-weight:600}
+  .sens th.rowh,.sens td:first-child{text-align:left;font-weight:600;font-size:12px}
+  .sens tr.cur td{box-shadow:inset 0 0 0 1.5px var(--ink)}
+
+  .note{font-size:12px;color:var(--muted);margin:13px 0 0;line-height:1.6}
+  .note b{color:var(--ink-2);font-weight:600}
+  footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .reset{appearance:none;border:0;background:none;font:inherit;font-size:12px;color:var(--muted);text-decoration:underline;text-decoration-color:#ccc;cursor:pointer;padding:0}
+  .reset:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow">Marketing &middot; Planificaci&oacute;n anual</div>
+    <h1>Planificador de funnel</h1>
+    <p class="sub">Arm&aacute; el mix de servicios y mir&aacute; cu&aacute;ntos <b>MQLs</b>, <b>oportunidades</b> y <b>clientes</b> hacen falta. Las tasas de conversi&oacute;n y los costes arrancan en la base real de <b>2025</b>: 182 MQLs &rarr; 13 oportunidades &rarr; 2 clientes &rarr; 28.200 &euro;.</p>
+    <div class="presets" id="presets"><span class="lbl">Escenarios</span></div>
+  </header>
+
+  <div class="grid">
+
+    <!-- ================= CONTROLES ================= -->
+    <div>
+      <section class="card">
+        <h2>Mix de servicios</h2>
+        <div class="body">
+          <div id="mix"></div>
+          <div class="mixfoot">
+            <span class="k">Facturaci&oacute;n del mix</span>
+            <span class="v num" id="revenue">&mdash;</span>
+          </div>
+          <div id="gap"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Supuestos</h2>
+        <div class="body">
+          <div class="field">
+            <div class="head"><label for="target">Objetivo de facturaci&oacute;n</label></div>
+            <div class="txtfield"><input type="number" id="target" step="10000" min="0"><span style="color:var(--muted)">&euro;</span></div>
+          </div>
+
+          <div class="field">
+            <div class="head"><label for="r1">Conversi&oacute;n MQL &rarr; Oportunidad</label><span class="val" id="r1v"></span></div>
+            <input type="range" id="r1" min="3" max="30" step="0.5">
+            <div class="base">2025: <b>7,1 %</b> &middot; benchmark B2B servicios: 15&ndash;25 %</div>
+          </div>
+
+          <div class="field">
+            <div class="head"><label for="r2">Conversi&oacute;n Oportunidad &rarr; Cliente</label><span class="val" id="r2v"></span></div>
+            <input type="range" id="r2" min="5" max="50" step="1">
+            <div class="base">2025: <b>15,4 %</b> &mdash; sobre 13 oportunidades, poco fiable</div>
+          </div>
+
+          <div class="twocol">
+            <div class="field">
+              <div class="head"><label for="cpm">Coste variable / MQL</label></div>
+              <div class="txtfield"><input type="number" id="cpm" step="1" min="0"><span style="color:var(--muted)">&euro;</span></div>
+              <div class="base">2025: <b>72 &euro;</b></div>
+            </div>
+            <div class="field">
+              <div class="head"><label for="fixed">Coste fijo anual</label></div>
+              <div class="txtfield"><input type="number" id="fixed" step="500" min="0"><span style="color:var(--muted)">&euro;</span></div>
+              <div class="base">Estructura, no escala</div>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="head"><label for="cycle">Ciclo de venta</label><span class="val" id="cyclev"></span></div>
+            <input type="range" id="cycle" min="0" max="9" step="1">
+            <div class="base">Los MQLs de los &uacute;ltimos meses no cierran dentro del a&ntilde;o</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ================= RESULTADOS ================= -->
+    <div>
+      <div class="kpis">
+        <div class="kpi">
+          <div class="k">Inversi&oacute;n</div>
+          <div class="v num" id="kInv">&mdash;</div>
+          <div class="d num" id="kInvD"></div>
+        </div>
+        <div class="kpi">
+          <div class="k">ROI</div>
+          <div class="v num" id="kRoi">&mdash;</div>
+          <div class="d num" id="kRoiD"></div>
+        </div>
+        <div class="kpi">
+          <div class="k">CAC</div>
+          <div class="v num" id="kCac">&mdash;</div>
+          <div class="d num" id="kCacD"></div>
+        </div>
+        <div class="kpi">
+          <div class="k">Ticket medio</div>
+          <div class="v num" id="kTkt">&mdash;</div>
+          <div class="d num" id="kTktD"></div>
+        </div>
+      </div>
+
+      <section class="card">
+        <h2>Funnel necesario</h2>
+        <div class="body" id="funnel"></div>
+      </section>
+
+      <section class="card">
+        <h2>Rentabilidad por servicio</h2>
+        <div class="body">
+          <table>
+            <thead><tr><th>Servicio</th><th>Precio</th><th>En el mix</th><th>Facturaci&oacute;n</th><th>Retorno / CAC</th></tr></thead>
+            <tbody id="unit"></tbody>
+          </table>
+          <p class="note" id="unitNote"></p>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Sensibilidad &mdash; MQLs necesarios</h2>
+        <div class="body">
+          <div style="overflow-x:auto">
+            <table class="sens">
+              <thead><tr><th class="rowh">MQL&rarr;Opp &darr; / Opp&rarr;Won &rarr;</th><th>15 %</th><th>20 %</th><th>25 %</th><th>30 %</th></tr></thead>
+              <tbody id="sens"></tbody>
+            </table>
+          </div>
+          <p class="note">Para los <b id="sensN">&mdash;</b> clientes del mix actual. Cada punto ganado en <b>MQL&rarr;Oportunidad</b> vale mucho m&aacute;s que cualquier euro extra de presupuesto: es la palanca m&aacute;s barata del funnel.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <footer>
+    <span>Base 2025 &middot; 27.000 &euro; invertidos (13.127 &euro; variable + 13.873 &euro; estructura) &middot; 28.200 &euro; facturados &middot; ROI 1,04x</span>
+    <button class="reset" id="reset">Volver a los valores por defecto</button>
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ---------- base real 2025 ---------- */
+var B = {
+  mqls:182, opps:13, clients:2, revenue:28200,
+  investTotal:27000, investVar:13127
+};
+B.fixed  = B.investTotal - B.investVar;   // 13.873
+B.cpm    = B.investVar / B.mqls;          // 72,13
+B.r1     = B.opps / B.mqls;               // 7,14 %
+B.r2     = B.clients / B.opps;            // 15,38 %
+B.ticket = B.revenue / B.clients;         // 14.100
+B.roi    = B.revenue / B.investTotal;     // 1,04x
+B.cac    = B.investTotal / B.clients;     // 13.500
+
+var SERVICES = [
+  {id:"dw", name:"Digital Workplace", price:30000},
+  {id:"ag", name:"Agentes IA",        price:15000},
+  {id:"gd", name:"Gestor documental", price:15000},
+  {id:"ad", name:"Adopción IA",  price:2500 },
+  {id:"ic", name:"Infra y CIBER",     price:2000 }
+];
+
+/* todos los presets suman exactamente 200.000 EUR */
+var PRESETS = [
+  {id:"rec",   label:"Recomendado · 3 DW", qty:{dw:3,ag:4,gd:3,ad:2,ic:0},   r1:15, r2:25},
+  {id:"onedw", label:"Un solo DW",              qty:{dw:1,ag:6,gd:5,ad:2,ic:0},   r1:15, r2:25},
+  {id:"nodw",  label:"Sin DW",                  qty:{dw:0,ag:7,gd:6,ad:2,ic:0},   r1:15, r2:25},
+  {id:"conc",  label:"Concentrado · 5 DW", qty:{dw:5,ag:2,gd:1,ad:2,ic:0},   r1:15, r2:25},
+  {id:"equi",  label:"Equilibrado",             qty:{dw:2,ag:4,gd:3,ad:6,ic:10},  r1:15, r2:25},
+  {id:"vol",   label:"Volumen",                 qty:{dw:0,ag:4,gd:4,ad:16,ic:20}, r1:15, r2:25},
+  {id:"lin",   label:"Tasas 2025 (lineal)",     qty:{dw:3,ag:4,gd:3,ad:2,ic:0},   r1:7.1, r2:15}
+];
+
+var DEFAULTS = {
+  qty:{dw:3,ag:4,gd:3,ad:2,ic:0},
+  price:{dw:30000,ag:15000,gd:15000,ad:2500,ic:2000},
+  target:200000, r1:15, r2:25,
+  cpm:Math.round(B.cpm), fixed:B.fixed, cycle:3
+};
+
+var KEY = "funnel-planner-v1";
+var S = load();
+
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+
+function load(){
+  var d = clone(DEFAULTS);
+  try{
+    var raw = localStorage.getItem(KEY);
+    if(!raw) return d;
+    var p = JSON.parse(raw);
+    var out = clone(DEFAULTS), k;
+    for(k in p){ if(k!=="qty" && k!=="price" && typeof p[k]==="number") out[k]=p[k]; }
+    if(p.qty)   for(k in out.qty)   if(typeof p.qty[k]==="number")   out.qty[k]=p.qty[k];
+    if(p.price) for(k in out.price) if(typeof p.price[k]==="number") out.price[k]=p.price[k];
+    return out;
+  }catch(e){ return d; }
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+/* ---------- formato ---------- */
+/* de-DE en vez de es-ES: misma notacion (1.234,5) pero agrupa a partir
+   de 4 digitos, que es-ES deja sin separador ("2000" en vez de "2.000") */
+var nf = new Intl.NumberFormat("de-DE", {maximumFractionDigits:1});
+function eur(n){ return nf.format(Math.round(n)) + " €"; }
+function eurK(n){ return n>=10000 ? nf.format(Math.round(n/1000))+"k €" : eur(n); }
+function pct(n){ return nf.format(Math.round(n*1000)/10) + " %"; }
+function mult(n){
+  var s = n<10 ? n.toFixed(2) : n.toFixed(1);
+  return s.replace(".",",") + "x";
+}
+
+/* ---------- calculo ---------- */
+function calc(){
+  var revenue = 0, clients = 0, i;
+  for(i=0;i<SERVICES.length;i++){
+    revenue += S.qty[SERVICES[i].id] * S.price[SERVICES[i].id];
+    clients += S.qty[SERVICES[i].id];
+  }
+  var r1 = S.r1/100, r2 = S.r2/100;
+  var opps = clients ? clients/r2 : 0;
+  var mqls = clients ? opps/r1 : 0;
+  var varCost = mqls * S.cpm;
+  var invest  = varCost + S.fixed;
+  var sellingMonths = Math.max(1, 12 - S.cycle);
+  return {
+    revenue:revenue, clients:clients, r1:r1, r2:r2,
+    opps:Math.ceil(opps), mqls:Math.ceil(mqls),
+    varCost:varCost, invest:invest,
+    roi: invest ? revenue/invest : 0,
+    cac: clients ? invest/clients : 0,
+    cacVar: (r1*r2) ? S.cpm/(r1*r2) : 0,
+    ticket: clients ? revenue/clients : 0,
+    perMonth: mqls/12,
+    perMonthFront: mqls/sellingMonths,
+    sellingMonths: sellingMonths,
+    oppsPerMonth: opps/sellingMonths
+  };
+}
+
+/* ---------- render ---------- */
+function renderPresets(){
+  var host = document.getElementById("presets");
+  PRESETS.forEach(function(p){
+    var b = document.createElement("button");
+    b.className = "chip";
+    b.textContent = p.label;
+    b.setAttribute("data-id", p.id);
+    b.onclick = function(){
+      var k;
+      for(k in S.qty) S.qty[k] = p.qty[k] || 0;
+      S.r1 = p.r1; S.r2 = p.r2;
+      save(); syncInputs(); render();
+    };
+    host.appendChild(b);
+  });
+}
+
+function renderMix(){
+  var host = document.getElementById("mix");
+  host.innerHTML = "";
+  SERVICES.forEach(function(s){
+    var row = document.createElement("div");
+    row.className = "svc" + (S.qty[s.id] === 0 ? " zero" : "");
+    row.innerHTML =
+      '<div><div class="name">' + s.name + '</div>' +
+      '<div class="price"><input type="number" step="500" min="0" value="' + S.price[s.id] + '" data-price="' + s.id + '" aria-label="Precio de ' + s.name + '"><span>€ por proyecto</span></div></div>' +
+      '<div class="stepper">' +
+        '<button data-dec="' + s.id + '" aria-label="Restar">−</button>' +
+        '<input type="number" min="0" step="1" value="' + S.qty[s.id] + '" data-qty="' + s.id + '" aria-label="Cantidad de ' + s.name + '">' +
+        '<button data-inc="' + s.id + '" aria-label="Sumar">+</button>' +
+      '</div>';
+    host.appendChild(row);
+  });
+
+  host.querySelectorAll("[data-inc]").forEach(function(b){
+    b.onclick = function(){ bump(b.getAttribute("data-inc"), 1); };
+  });
+  host.querySelectorAll("[data-dec]").forEach(function(b){
+    b.onclick = function(){ bump(b.getAttribute("data-dec"), -1); };
+  });
+  host.querySelectorAll("[data-qty]").forEach(function(i){
+    i.oninput = function(){
+      S.qty[i.getAttribute("data-qty")] = Math.max(0, Math.floor(+i.value || 0));
+      save(); render({keepMix:true});
+    };
+  });
+  host.querySelectorAll("[data-price]").forEach(function(i){
+    i.oninput = function(){
+      S.price[i.getAttribute("data-price")] = Math.max(0, +i.value || 0);
+      save(); render({keepMix:true});
+    };
+  });
+}
+function bump(id, d){
+  S.qty[id] = Math.max(0, S.qty[id] + d);
+  save(); render();
+}
+
+function renderFunnel(c){
+  var host = document.getElementById("funnel");
+  var max = Math.max(c.mqls, 1);
+  var stages = [
+    { nm:"MQLs", sub:"leads calificados", q:c.mqls, base:B.mqls, meta:[
+      "<b>" + nf.format(Math.ceil(c.perMonth)) + "</b>/mes a ritmo plano",
+      "<b>" + nf.format(Math.ceil(c.perMonthFront)) + "</b>/mes concentrados en " + c.sellingMonths + " meses",
+      "coste <b>" + eur(c.varCost) + "</b>"
+    ]},
+    { nm:"Oportunidades", sub:pct(c.r1) + " de los MQLs", q:c.opps, base:B.opps, meta:[
+      "<b>" + (Math.round(c.oppsPerMonth*10)/10).toFixed(1).replace(".",",") + "</b>/mes",
+      "coste por oportunidad <b>" + eur(c.opps ? c.varCost/c.opps : 0) + "</b>"
+    ]},
+    { nm:"Clientes", sub:pct(c.r2) + " de las oportunidades", q:c.clients, base:B.clients, meta:[
+      "ticket medio <b>" + eur(c.ticket) + "</b>",
+      "MQL→Cliente <b>" + pct(c.r1*c.r2) + "</b>"
+    ]}
+  ];
+  host.innerHTML = stages.map(function(s){
+    var x = s.base ? s.q/s.base : 0;
+    return '<div class="stage">' +
+      '<div class="row1"><div class="nm">' + s.nm + ' <span>' + s.sub + '</span></div>' +
+      '<div class="qty">' + nf.format(s.q) + '</div></div>' +
+      '<div class="bar"><i style="width:' + Math.max(1.2, (s.q/max)*100) + '%"></i></div>' +
+      '<div class="meta">' + s.meta.map(function(m){ return "<span>" + m + "</span>"; }).join("") +
+      '<span style="margin-left:auto">vs 2025 &middot; <b>' + mult(x) + '</b></span></div></div>';
+  }).join("");
+}
+
+function renderUnit(c){
+  var host = document.getElementById("unit");
+  host.innerHTML = SERVICES.map(function(s){
+    var q = S.qty[s.id], rev = q*S.price[s.id];
+    var ratio = c.cacVar ? S.price[s.id]/c.cacVar : 0;
+    var cls = ratio >= 3 ? "g" : ratio >= 1.5 ? "w" : "b";
+    return '<tr class="' + (q ? "" : "dim") + '"><td>' + s.name + '</td><td>' + eur(S.price[s.id]) + '</td>' +
+      '<td>' + q + '</td><td>' + (rev ? eur(rev) : "—") + '</td>' +
+      '<td><span class="pill ' + cls + '">' + mult(ratio) + '</span></td></tr>';
+  }).join("");
+
+  var bad = SERVICES.filter(function(s){
+    return c.cacVar && (S.price[s.id]/c.cacVar) < 1.5;
+  });
+  var names = bad.map(function(s){ return s.name; }).join(" y ");
+  document.getElementById("unitNote").innerHTML =
+    "Con estas tasas, adquirir un cliente cuesta <b>" + eur(c.cacVar) +
+    "</b> de gasto variable (coste por MQL ÷ conversión MQL→Cliente de " + pct(c.r1*c.r2) + "). " +
+    (bad.length
+      ? "<b>" + names + "</b> " + (bad.length > 1 ? "quedan" : "queda") +
+        " por debajo de 1,5x: " + (bad.length > 1 ? "no se sostienen" : "no se sostiene") +
+        " como captación por marketing pago. Van por referido, upsell o comercial directo — o como puerta de entrada a un proyecto grande."
+      : "Todos los servicios del mix aguantan la captación por marketing.");
+}
+
+function renderSens(c){
+  var rows = [7.1, 10, 12, 15, 20];
+  var cols = [15, 20, 25, 30];
+  document.getElementById("sensN").textContent = nf.format(c.clients);
+  document.getElementById("sens").innerHTML = rows.map(function(r){
+    var isCur = Math.abs(r - S.r1) < 1.3;
+    var tds = cols.map(function(k){
+      var n = c.clients ? Math.ceil(c.clients / ((r/100)*(k/100))) : 0;
+      var x = B.mqls ? n/B.mqls : 0;
+      var cls = x > 4 ? "hot" : x > 2.2 ? "mid" : "cool";
+      return '<td class="' + cls + '">' + nf.format(n) + '</td>';
+    }).join("");
+    return '<tr class="' + (isCur ? "cur" : "") + '"><td>' +
+      nf.format(r) + " %" + (Math.abs(r - 7.1) < 0.05 ? " · hoy" : "") +
+      '</td>' + tds + '</tr>';
+  }).join("");
+}
+
+function renderKpis(c){
+  function set(id, v, d, cls){
+    document.getElementById(id).textContent = v;
+    var el = document.getElementById(id + "D");
+    el.innerHTML = d;
+    el.className = "d num" + (cls ? " " + cls : "");
+  }
+  set("kInv", eurK(c.invest), eur(c.varCost) + " variable + " + eur(S.fixed) + " fijo");
+  set("kRoi", mult(c.roi), "2025: " + mult(B.roi), c.roi > B.roi ? "up" : "dn");
+  set("kCac", eur(c.cac), "2025: " + eur(B.cac), c.cac < B.cac ? "up" : "dn");
+  set("kTkt", eur(c.ticket), "2025: " + eur(B.ticket), c.ticket > B.ticket ? "up" : "dn");
+}
+
+function renderRevenue(c){
+  document.getElementById("revenue").textContent = eur(c.revenue);
+  var g = document.getElementById("gap");
+  var diff = c.revenue - S.target;
+  if(Math.abs(diff) < 1){
+    g.className = "ok";
+    g.textContent = "✓ Da exactamente el objetivo de " + eur(S.target);
+  }else if(diff < 0){
+    var need = Math.ceil(-diff/15000);
+    g.className = "under";
+    g.textContent = "Faltan " + eur(-diff) + " — unos " + need + " proyecto" + (need > 1 ? "s" : "") + " de 15.000 €";
+  }else{
+    g.className = "over";
+    g.textContent = "Sobran " + eur(diff) + " sobre el objetivo (" + mult(S.target ? c.revenue/S.target : 0) + " del objetivo)";
+  }
+}
+
+function markPresets(){
+  var cur = SERVICES.map(function(s){ return S.qty[s.id]; }).join(",");
+  document.querySelectorAll(".chip").forEach(function(b){
+    var id = b.getAttribute("data-id");
+    var p = null, i;
+    for(i=0;i<PRESETS.length;i++) if(PRESETS[i].id === id) p = PRESETS[i];
+    if(!p) return;
+    var same = SERVICES.map(function(s){ return p.qty[s.id] || 0; }).join(",") === cur &&
+               Math.abs(p.r1 - S.r1) < 0.05 && Math.abs(p.r2 - S.r2) < 0.05;
+    b.classList.toggle("on", same);
+  });
+}
+
+function paintRange(el){
+  var p = ((el.value - el.min)/(el.max - el.min))*100;
+  el.style.setProperty("--pct", p + "%");
+}
+
+function syncInputs(){
+  ["target","r1","r2","cpm","fixed","cycle"].forEach(function(k){
+    document.getElementById(k).value = S[k];
+  });
+  ["r1","r2","cycle"].forEach(function(id){ paintRange(document.getElementById(id)); });
+  document.getElementById("r1v").textContent = nf.format(S.r1) + " %";
+  document.getElementById("r2v").textContent = nf.format(S.r2) + " %";
+  document.getElementById("cyclev").textContent =
+    S.cycle === 0 ? "inmediato" : S.cycle + " mes" + (S.cycle > 1 ? "es" : "");
+}
+
+function render(opt){
+  opt = opt || {};
+  if(!opt.keepMix) renderMix();
+  var c = calc();
+  renderRevenue(c); renderKpis(c); renderFunnel(c);
+  renderUnit(c); renderSens(c); markPresets();
+}
+
+/* ---------- wiring ---------- */
+renderPresets();
+syncInputs();
+render();
+
+["r1","r2","cycle"].forEach(function(id){
+  var el = document.getElementById(id);
+  el.oninput = function(){
+    S[id] = +el.value; paintRange(el); save(); syncInputs(); render({keepMix:true});
+  };
+});
+["target","cpm","fixed"].forEach(function(id){
+  var el = document.getElementById(id);
+  el.oninput = function(){
+    S[id] = Math.max(0, +el.value || 0); save(); render({keepMix:true});
+  };
+});
+document.getElementById("reset").onclick = function(){
+  S = clone(DEFAULTS); save(); syncInputs(); render();
+};
+</script>
+</body>
+</html>
