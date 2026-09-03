@@ -79,7 +79,7 @@ pone en rojo indicando por cuánto se pasan.
 
 ## Escenarios precargados
 
-Calculados para un objetivo de 200.000 € y tasas al benchmark (15 % / 25 %). Al cambiar el objetivo
+Calculados para un objetivo de 200.000 € y tasas objetivo del 15 % / 25 %. Al cambiar el objetivo
 se rearman solos:
 
 | Escenario | Mix | Clientes | MQLs | Conversión mínima* |
