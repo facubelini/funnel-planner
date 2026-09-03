@@ -33,6 +33,26 @@ CAC variable   = coste por MQL / (MQL→Opp × Opp→Won)
 El **CAC variable** es la métrica clave de la tabla de rentabilidad: si un servicio cuesta menos
 que el CAC, adquirir ese cliente por marketing pago pierde dinero.
 
+## La restricción de presupuesto
+
+El presupuesto disponible (51.400 €) es un techo duro, y la tarjeta *Encaje en el presupuesto*
+invierte el cálculo: en vez de decirte cuánto costaría el mix, te dice qué conversión estás
+**obligado** a alcanzar para que el mix entre en el presupuesto.
+
+```
+medios disponibles = presupuesto − estructura − reserva de conversión
+MQLs que compra    = medios disponibles / coste por MQL
+conversión mínima  = clientes del mix / MQLs que compra
+techo de clientes  = MQLs que compra × MQL→Opp × Opp→Won
+```
+
+La reserva de conversión (nurturing, SDR, sales enablement) es el trade-off central: cada euro
+que le pasás desde medios reduce los MQLs que podés comprar y por lo tanto **sube** la tasa que
+tenés que alcanzar — pero es lo único que financia esa mejora de tasa.
+
+Los mixes de bajo ticket y alto volumen quedan fuera de presupuesto automáticamente, y la banda
+se pone en rojo indicando por cuánto se pasan.
+
 ## Escenarios precargados
 
 Los siete presets suman exactamente 200.000 €, así que se pueden comparar de forma directa:
