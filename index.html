@@ -23,6 +23,7 @@
     --bad:#b32d24;
     --bad-soft:#fceceb;
     --radius:10px;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
     --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
   }
   *{box-sizing:border-box}
@@ -39,7 +40,7 @@
   header.top{padding:36px 0 22px;border-bottom:1px solid var(--line)}
   .eyebrow{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:600}
   h1{margin:8px 0 6px;font-size:27px;line-height:1.2;letter-spacing:-.02em;font-weight:650}
-  .sub{color:var(--ink-2);max-width:64ch;margin:0}
+  .sub{color:var(--ink-2);max-width:66ch;margin:0}
   .sub b{font-weight:600;color:var(--ink)}
 
   /* ---------- presets ---------- */
@@ -52,9 +53,11 @@
   }
   .chip:hover{border-color:#c9c9c2;color:var(--ink)}
   .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .presetnote{font-size:11.5px;color:var(--muted);margin:11px 0 0}
+  .presetnote b{color:var(--ink-2);font-weight:600}
 
   /* ---------- layout ---------- */
-  .grid{display:grid;grid-template-columns:395px minmax(0,1fr);gap:26px;margin-top:26px;align-items:start}
+  .grid{display:grid;grid-template-columns:400px minmax(0,1fr);gap:26px;margin-top:26px;align-items:start}
   @media (max-width:1020px){.grid{grid-template-columns:1fr}}
 
   .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
@@ -64,6 +67,29 @@
     color:var(--muted);font-weight:650;border-bottom:1px solid var(--line-2);
   }
   .card .body{padding:16px 18px}
+
+  /* ---------- explicadores ---------- */
+  details.how{margin-top:15px;border-top:1px solid var(--line-2);padding-top:12px}
+  details.how summary{
+    cursor:pointer;font-size:11px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);list-style:none;display:flex;align-items:center;gap:7px;
+  }
+  details.how summary::-webkit-details-marker{display:none}
+  details.how summary::before{content:"+";font-size:15px;font-weight:400;line-height:1;width:10px;text-align:center}
+  details.how[open] summary::before{content:"\2212"}
+  details.how summary:hover{color:var(--ink)}
+  details.how .inner{padding-top:12px;font-size:12.5px;color:var(--ink-2);line-height:1.68}
+  details.how .inner p{margin:0 0 10px}
+  details.how .inner p:last-child{margin-bottom:0}
+  details.how .inner b{color:var(--ink);font-weight:600}
+  details.how .inner ul{margin:0 0 10px;padding-left:18px}
+  details.how .inner li{margin-bottom:5px}
+  .f{
+    display:block;background:var(--surface-2);border:1px solid var(--line-2);border-left:2px solid var(--accent);
+    border-radius:0 6px 6px 0;padding:9px 12px;margin:9px 0;font-size:12px;
+    font-family:var(--mono);color:var(--ink);overflow-x:auto;line-height:1.6;
+  }
+  .f em{color:var(--muted);font-style:normal}
 
   /* ---------- mix rows ---------- */
   .svc{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line-2)}
@@ -97,7 +123,7 @@
   #gap.under{background:var(--warn-soft);color:var(--warn)}
   #gap.over{background:var(--accent-soft);color:var(--accent)}
 
-  /* ---------- assumptions ---------- */
+  /* ---------- campos ---------- */
   .field{margin-bottom:17px}
   .field:last-child{margin-bottom:2px}
   .field .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:10px}
@@ -123,6 +149,14 @@
   }
   .txtfield input[type=number]:focus{outline:0;border-color:var(--accent);background:#fff}
   .twocol{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .btn{
+    appearance:none;width:100%;margin-top:9px;border:1px solid var(--ink);background:var(--ink);color:#fff;
+    border-radius:7px;padding:8px 12px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;
+    transition:opacity .13s;
+  }
+  .btn:hover{opacity:.85}
+  .btn.ghost{background:none;color:var(--ink-2);border-color:var(--line)}
+  .btn.ghost:hover{border-color:#c9c9c2;color:var(--ink);opacity:1}
 
   /* ---------- KPIs ---------- */
   .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-2);border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
@@ -134,6 +168,26 @@
   .kpi .d.up{color:var(--good)}
   .kpi .d.dn{color:var(--bad)}
 
+  /* ---------- presupuesto ---------- */
+  .bband{padding:11px 13px;border-radius:8px;font-weight:600;font-size:13.5px}
+  .bband.ok{background:var(--good-soft);color:var(--good)}
+  .bband.tight{background:var(--warn-soft);color:var(--warn)}
+  .bband.over{background:var(--bad-soft);color:var(--bad)}
+  .balloc{display:flex;height:12px;border-radius:6px;overflow:hidden;margin:15px 0 9px;background:var(--line-2)}
+  .balloc i{display:block;height:100%}
+  .blegend{display:flex;gap:15px;flex-wrap:wrap;font-size:11.5px;color:var(--muted)}
+  .blegend span{display:flex;align-items:center;gap:5px}
+  .blegend em{width:8px;height:8px;border-radius:2px;display:block;flex:none}
+  .blegend b{color:var(--ink-2);font-weight:600;font-variant-numeric:tabular-nums}
+  .bstats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line-2)}
+  @media (max-width:720px){.bstats{grid-template-columns:1fr 1fr}}
+  .bstat .k{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:650}
+  .bstat .v{font-size:19px;font-weight:650;margin-top:4px;font-variant-numeric:tabular-nums;letter-spacing:-.015em}
+  .bstat .s{font-size:11px;color:var(--muted);margin-top:3px}
+  .bstat .v.warn{color:var(--warn)}
+  .bstat .v.bad{color:var(--bad)}
+  .bstat .v.good{color:var(--good)}
+
   /* ---------- funnel ---------- */
   .stage{padding:13px 0;border-bottom:1px solid var(--line-2)}
   .stage:last-child{border-bottom:0;padding-bottom:2px}
@@ -143,12 +197,12 @@
   .stage .qty{font-size:19px;font-weight:650;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
   .bar{height:9px;border-radius:5px;background:var(--line-2);overflow:hidden}
   .bar i{display:block;height:100%;border-radius:5px;background:var(--accent);transition:width .28s cubic-bezier(.4,0,.2,1)}
-  .stage:nth-child(2) .bar i{background:#5a83e4}
-  .stage:nth-child(3) .bar i{background:#8aa8ee}
+  .stage.s2 .bar i{background:#5a83e4}
+  .stage.s3 .bar i{background:#8aa8ee}
   .stage .meta{display:flex;gap:14px;margin-top:7px;font-size:11.5px;color:var(--muted);flex-wrap:wrap}
   .stage .meta b{color:var(--ink-2);font-weight:600}
 
-  /* ---------- tables ---------- */
+  /* ---------- tablas ---------- */
   table{width:100%;border-collapse:collapse;font-size:13px}
   th{
     text-align:right;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
@@ -170,26 +224,7 @@
   .sens td.cool{background:var(--good-soft);color:var(--good);font-weight:600}
   .sens th.rowh,.sens td:first-child{text-align:left;font-weight:600;font-size:12px}
   .sens tr.cur td{box-shadow:inset 0 0 0 1.5px var(--ink)}
-
-  /* ---------- presupuesto ---------- */
-  .bband{padding:11px 13px;border-radius:8px;font-weight:600;font-size:13.5px}
-  .bband.ok{background:var(--good-soft);color:var(--good)}
-  .bband.tight{background:var(--warn-soft);color:var(--warn)}
-  .bband.over{background:var(--bad-soft);color:var(--bad)}
-  .balloc{display:flex;height:12px;border-radius:6px;overflow:hidden;margin:15px 0 9px;background:var(--line-2)}
-  .balloc i{display:block;height:100%}
-  .blegend{display:flex;gap:15px;flex-wrap:wrap;font-size:11.5px;color:var(--muted)}
-  .blegend span{display:flex;align-items:center;gap:5px}
-  .blegend em{width:8px;height:8px;border-radius:2px;display:block}
-  .blegend b{color:var(--ink-2);font-weight:600;font-variant-numeric:tabular-nums}
-  .bstats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line-2)}
-  @media (max-width:720px){.bstats{grid-template-columns:1fr 1fr}}
-  .bstat .k{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:650}
-  .bstat .v{font-size:19px;font-weight:650;margin-top:4px;font-variant-numeric:tabular-nums;letter-spacing:-.015em}
-  .bstat .s{font-size:11px;color:var(--muted);margin-top:3px}
-  .bstat .v.warn{color:var(--warn)}
-  .bstat .v.bad{color:var(--bad)}
-  .bstat .v.good{color:var(--good)}
+  .sens td.pick{outline:2px solid var(--ink);outline-offset:-2px}
 
   .note{font-size:12px;color:var(--muted);margin:13px 0 0;line-height:1.6}
   .note b{color:var(--ink-2);font-weight:600}
@@ -204,14 +239,52 @@
   <header class="top">
     <div class="eyebrow">Marketing &middot; Planificaci&oacute;n anual</div>
     <h1>Planificador de funnel</h1>
-    <p class="sub">Arm&aacute; el mix de servicios y mir&aacute; cu&aacute;ntos <b>MQLs</b>, <b>oportunidades</b> y <b>clientes</b> hacen falta. Las tasas de conversi&oacute;n y los costes arrancan en la base real de <b>2025</b>: 182 MQLs &rarr; 13 oportunidades &rarr; 2 clientes &rarr; 28.200 &euro;.</p>
+    <p class="sub">Pon&eacute; el <b>objetivo de facturaci&oacute;n</b> y el <b>presupuesto</b>, y la herramienta te devuelve el mix de servicios recomendado y los <b>MQLs</b>, <b>oportunidades</b> y <b>clientes</b> que hacen falta. Todo arranca de la base real de <b>2025</b>: 182 MQLs &rarr; 13 oportunidades &rarr; 2 clientes &rarr; 28.200 &euro;.</p>
     <div class="presets" id="presets"><span class="lbl">Escenarios</span></div>
+    <p class="presetnote">Los escenarios se recalculan solos para el objetivo que pongas: cambian el reparto entre servicios, no la cifra a facturar.</p>
   </header>
 
   <div class="grid">
 
     <!-- ================= CONTROLES ================= -->
     <div>
+      <section class="card">
+        <h2>Objetivo y presupuesto</h2>
+        <div class="body">
+          <div class="field">
+            <div class="head"><label for="target">Objetivo de facturaci&oacute;n</label><span class="val" id="targetv"></span></div>
+            <div class="txtfield"><input type="number" id="target" step="10000" min="0"><span style="color:var(--muted)">&euro;</span></div>
+            <input type="range" id="targetR" min="50000" max="500000" step="10000" style="margin-top:10px">
+            <button class="btn" id="applyRec">Aplicar mix recomendado para este objetivo</button>
+          </div>
+
+          <div class="field">
+            <div class="head"><label for="budget">Presupuesto a gastar</label><span class="val" id="budgetv"></span></div>
+            <div class="txtfield"><input type="number" id="budget" step="1000" min="0"><span style="color:var(--muted)">&euro;</span></div>
+            <input type="range" id="budgetR" min="0" max="150000" step="1000" style="margin-top:10px">
+            <div class="base">Dinero libre para invertir, <b>sin estructura ni salarios</b></div>
+          </div>
+
+          <div class="field">
+            <div class="head"><label for="reserve">Reserva para conversi&oacute;n</label><span class="val" id="reservev"></span></div>
+            <input type="range" id="reserve" min="0" max="30000" step="500">
+            <div class="base">Parte del presupuesto que no compra MQLs: nurturing, SDR, cualificaci&oacute;n, sales enablement. Es lo que sube las tasas.</div>
+          </div>
+
+          <details class="how">
+            <summary>C&oacute;mo se calcula el mix recomendado</summary>
+            <div class="inner">
+              <p>El mix recomendado reparte tu objetivo por <b>peso de facturaci&oacute;n</b>, no por cantidad de proyectos. Cada escenario define qu&eacute; porcentaje del objetivo aporta cada servicio, y de ah&iacute; salen las cantidades:</p>
+              <span class="f">cantidad = piso( objetivo &times; peso &divide; precio )</span>
+              <p>Al redondear para abajo siempre queda un resto. Ese resto se reparte d&aacute;ndole el proyecto al servicio que est&aacute; <b>m&aacute;s lejos de su cuota</b>, y cada servicio tiene un <b>techo</b> de un proyecto por encima de lo que le toca. Ese techo es importante: sin &eacute;l, el hueco se rellena con proyectos de 2.000&ndash;2.500 &euro; porque son los &uacute;nicos que caben, y el mix termina lleno de justo los servicios que no conviene captar por marketing.</p>
+              <p>Si al final todav&iacute;a queda hueco, se suma un &uacute;nico proyecto m&aacute;s &mdash; el que deje el total m&aacute;s cerca del objetivo, sea por arriba o por abajo. Con proyectos de 15.000 y 30.000 &euro; no todo objetivo cae redondo, as&iacute; que el mix puede quedar un par de miles arriba o abajo. La franja de abajo te dice exactamente cu&aacute;nto.</p>
+              <p>Pesos del escenario <b>Recomendado</b>: Digital Workplace 45 %, Agentes IA 28 %, Gestor documental 24 %, Adopci&oacute;n IA 3 %. El tope del 45 % en Digital Workplace es a prop&oacute;sito: es el servicio m&aacute;s rentable pero tambi&eacute;n el m&aacute;s difícil de cerrar, y no conviene que m&aacute;s de la mitad del a&ntilde;o dependa de &eacute;l.</p>
+              <p>Si tocás los steppers a mano, el escenario se desactiva y el mix pasa a ser tuyo.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
       <section class="card">
         <h2>Mix de servicios</h2>
         <div class="body">
@@ -221,30 +294,21 @@
             <span class="v num" id="revenue">&mdash;</span>
           </div>
           <div id="gap"></div>
+
+          <details class="how">
+            <summary>C&oacute;mo funciona este bloque</summary>
+            <div class="inner">
+              <p>Cada fila es un servicio. El <b>stepper</b> de la derecha es cuántos proyectos de ese tipo vas a vender en el a&ntilde;o; el n&uacute;mero de la izquierda es el <b>precio</b>, y también lo pod&eacute;s editar si cambian las tarifas.</p>
+              <span class="f">facturaci&oacute;n = &Sigma; ( cantidad &times; precio )<br>clientes = &Sigma; cantidades</span>
+              <p>La franja de abajo compara la facturaci&oacute;n del mix contra tu objetivo y te dice cu&aacute;nto falta o sobra. <b>Clientes</b> es la suma de proyectos: en este modelo un proyecto = un cliente.</p>
+            </div>
+          </details>
         </div>
       </section>
 
       <section class="card">
-        <h2>Supuestos</h2>
+        <h2>Tasas y costes</h2>
         <div class="body">
-          <div class="field">
-            <div class="head"><label for="target">Objetivo de facturaci&oacute;n</label></div>
-            <div class="txtfield"><input type="number" id="target" step="10000" min="0"><span style="color:var(--muted)">&euro;</span></div>
-          </div>
-
-          <div class="twocol">
-            <div class="field">
-              <div class="head"><label for="budget">Presupuesto disponible</label></div>
-              <div class="txtfield"><input type="number" id="budget" step="1000" min="0"><span style="color:var(--muted)">&euro;</span></div>
-              <div class="base">Todo incluido</div>
-            </div>
-            <div class="field">
-              <div class="head"><label for="reserve">Reserva conversi&oacute;n</label></div>
-              <div class="txtfield"><input type="number" id="reserve" step="500" min="0"><span style="color:var(--muted)">&euro;</span></div>
-              <div class="base">Nurturing, SDR, enablement</div>
-            </div>
-          </div>
-
           <div class="field">
             <div class="head"><label for="r1">Conversi&oacute;n MQL &rarr; Oportunidad</label><span class="val" id="r1v"></span></div>
             <input type="range" id="r1" min="3" max="30" step="0.5">
@@ -254,27 +318,39 @@
           <div class="field">
             <div class="head"><label for="r2">Conversi&oacute;n Oportunidad &rarr; Cliente</label><span class="val" id="r2v"></span></div>
             <input type="range" id="r2" min="5" max="50" step="1">
-            <div class="base">2025: <b>15,4 %</b> &mdash; sobre 13 oportunidades, poco fiable</div>
+            <div class="base">2025: <b>15,4 %</b> &mdash; sale de 2 cierres sobre 13, poco fiable</div>
           </div>
 
           <div class="twocol">
             <div class="field">
-              <div class="head"><label for="cpm">Coste variable / MQL</label></div>
-              <div class="txtfield"><input type="number" id="cpm" step="1" min="0"><span style="color:var(--muted)">&euro;</span></div>
+              <div class="head"><label for="cpm">Coste por MQL</label></div>
+              <div class="txtfield"><input type="number" id="cpm" step="1" min="1"><span style="color:var(--muted)">&euro;</span></div>
               <div class="base">2025: <b>72 &euro;</b></div>
             </div>
             <div class="field">
-              <div class="head"><label for="fixed">Coste fijo anual</label></div>
+              <div class="head"><label for="fixed">Estructura anual</label></div>
               <div class="txtfield"><input type="number" id="fixed" step="500" min="0"><span style="color:var(--muted)">&euro;</span></div>
-              <div class="base">Estructura, no escala</div>
+              <div class="base">Fuera del presupuesto</div>
             </div>
           </div>
 
           <div class="field">
             <div class="head"><label for="cycle">Ciclo de venta</label><span class="val" id="cyclev"></span></div>
             <input type="range" id="cycle" min="0" max="9" step="1">
-            <div class="base">Los MQLs de los &uacute;ltimos meses no cierran dentro del a&ntilde;o</div>
+            <div class="base">Meses desde que entra el MQL hasta que firma</div>
           </div>
+
+          <details class="how">
+            <summary>De d&oacute;nde sale cada n&uacute;mero</summary>
+            <div class="inner">
+              <p><b>Coste por MQL</b> &mdash; lo que te cuesta traer un lead calificado. Sale de la inversi&oacute;n variable de 2025 dividida por los MQLs de 2025:</p>
+              <span class="f">13.127 &euro; &divide; 182 MQLs = 72 &euro; <em>por MQL</em></span>
+              <p><b>Estructura anual</b> &mdash; los 13.873 &euro; de salario y estructura del a&ntilde;o pasado (27.000 &euro; totales &minus; 13.127 &euro; variables). Es un coste fijo: no crece si generás más MQLs. Queda <b>fuera del presupuesto a gastar</b>, pero s&iacute; entra en el c&aacute;lculo de ROI y CAC, porque es plata real que cuesta el funnel.</p>
+              <p><b>Las dos tasas</b> son los saltos del funnel. Multiplicadas dan la conversi&oacute;n de punta a punta:</p>
+              <span class="f">MQL&rarr;Cliente = MQL&rarr;Opp &times; Opp&rarr;Won<br><em>2025: 7,1 % &times; 15,4 % = 1,10 %</em></span>
+              <p><b>Ciclo de venta</b> &mdash; no cambia cu&aacute;ntos MQLs necesit&aacute;s, cambia <b>cu&aacute;ndo</b>. Un MQL que entra en noviembre con ciclo de 3 meses cierra el a&ntilde;o que viene, no este. Por eso los meses útiles de generaci&oacute;n son <code>12 &minus; ciclo</code>, y el ritmo mensual real es m&aacute;s alto que el promedio plano.</p>
+            </div>
+          </details>
         </div>
       </section>
     </div>
@@ -283,7 +359,7 @@
     <div>
       <div class="kpis">
         <div class="kpi">
-          <div class="k">Inversi&oacute;n</div>
+          <div class="k">Inversi&oacute;n total</div>
           <div class="v num" id="kInv">&mdash;</div>
           <div class="d num" id="kInvD"></div>
         </div>
@@ -312,12 +388,43 @@
           <div class="blegend" id="blegend"></div>
           <div class="bstats" id="bstats"></div>
           <p class="note" id="bnote"></p>
+
+          <details class="how">
+            <summary>C&oacute;mo se calcula el encaje</summary>
+            <div class="inner">
+              <p>Este bloque contesta una sola pregunta: <b>¿el plan cabe en la plata que ten&eacute;s?</b> Va al rev&eacute;s que el funnel &mdash; en vez de partir de los clientes, parte del dinero.</p>
+              <span class="f">medios = presupuesto &minus; reserva de conversi&oacute;n<br>MQLs que compra = medios &divide; coste por MQL</span>
+              <p>Eso es el <b>techo de volumen</b>: m&aacute;s MQLs que eso no pod&eacute;s pagar. Compar&aacute;ndolo con los MQLs que pide tu mix sale la <b>holgura</b>:</p>
+              <span class="f">holgura = MQLs que compra &minus; MQLs que necesita el mix</span>
+              <p>Y dando la vuelta al c&aacute;lculo sale el dato m&aacute;s &uacute;til de todos, la <b>conversi&oacute;n m&iacute;nima</b>: qué tasa de punta a punta ten&eacute;s que lograr para que el presupuesto alcance.</p>
+              <span class="f">conversi&oacute;n m&iacute;nima = clientes &divide; MQLs que compra</span>
+              <p>Si ese n&uacute;mero est&aacute; por encima de lo que puedas conseguir en la realidad, el plan no cierra: hay que subir presupuesto, bajar el objetivo, o mover el mix a servicios de ticket m&aacute;s alto.</p>
+              <p>La <b>reserva de conversi&oacute;n</b> juega en contra del volumen y a favor de la tasa: cada euro que reserv&aacute;s compra menos MQLs pero deber&iacute;a hacer que los que entran conviertan mejor. Es el trade-off central del plan.</p>
+            </div>
+          </details>
         </div>
       </section>
 
       <section class="card">
         <h2>Funnel necesario</h2>
-        <div class="body" id="funnel"></div>
+        <div class="body">
+          <div id="funnel"></div>
+
+          <details class="how">
+            <summary>C&oacute;mo se calcula el funnel</summary>
+            <div class="inner">
+              <p>Se calcula <b>hacia atr&aacute;s</b>: arranca de los clientes que pide el mix y sube por el funnel dividiendo por cada tasa de conversi&oacute;n.</p>
+              <span class="f">clientes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= del mix de servicios<br>oportunidades = clientes &divide; (Opp&rarr;Won)<br>MQLs &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= oportunidades &divide; (MQL&rarr;Opp)</span>
+              <p>Las barras est&aacute;n a escala de los MQLs, para que se vea de un golpe cu&aacute;nto se pierde en cada salto. El <b>vs 2025</b> de la derecha compara cada etapa con la del a&ntilde;o pasado (182 / 13 / 2).</p>
+              <p>Los dos ritmos mensuales son distintos a prop&oacute;sito:</p>
+              <ul>
+                <li><b>A ritmo plano</b> &mdash; <code>MQLs &divide; 12</code>. Es el promedio, sirve poco para planificar.</li>
+                <li><b>Concentrados</b> &mdash; <code>MQLs &divide; (12 &minus; ciclo)</code>. Es el ritmo real que ten&eacute;s que sostener, porque los MQLs de los &uacute;ltimos meses ya no cierran dentro del a&ntilde;o. Este es el n&uacute;mero que va al plan de medios.</li>
+              </ul>
+              <p>El <b>coste por oportunidad</b> es el gasto en medios dividido por las oportunidades generadas: es la m&eacute;trica que mejor muestra si el problema est&aacute; arriba o abajo del funnel.</p>
+            </div>
+          </details>
+        </div>
       </section>
 
       <section class="card">
@@ -328,6 +435,24 @@
             <tbody id="unit"></tbody>
           </table>
           <p class="note" id="unitNote"></p>
+
+          <details class="how">
+            <summary>C&oacute;mo se calcula el retorno por servicio</summary>
+            <div class="inner">
+              <p>La pregunta es: <b>¿cu&aacute;nto cuesta conseguir un cliente por marketing, y vale la pena para este servicio?</b></p>
+              <p>Primero, el CAC variable &mdash; lo que cuesta un cliente en pura inversi&oacute;n de medios, sin estructura:</p>
+              <span class="f">CAC variable = coste por MQL &divide; (MQL&rarr;Opp &times; Opp&rarr;Won)</span>
+              <p>Es lo mismo que decir "cu&aacute;ntos MQLs necesito por cliente, por lo que cuesta cada MQL". Despu&eacute;s, para cada servicio:</p>
+              <span class="f">retorno / CAC = precio del servicio &divide; CAC variable</span>
+              <p>Los colores marcan el umbral:</p>
+              <ul>
+                <li><span class="pill g">3x o m&aacute;s</span> &nbsp;sano: el servicio paga su captaci&oacute;n con margen de sobra.</li>
+                <li><span class="pill w">1,5x &ndash; 3x</span> &nbsp;justo: funciona pero sin colchón para errores.</li>
+                <li><span class="pill b">menos de 1,5x</span> &nbsp;no se sostiene por marketing pago.</li>
+              </ul>
+              <p>Ojo con esto: un servicio de <b>2.000 &euro;</b> con un CAC de <b>1.900 &euro;</b> te deja 100 &euro;. No es un mal margen, es <b>ning&uacute;n</b> margen &mdash; y encima todav&iacute;a hay que entregar el proyecto. Esos servicios tienen que llegar por referido, upsell o comercial directo. La excepci&oacute;n es si abren la puerta a un proyecto grande despu&eacute;s: ah&iacute; el c&aacute;lculo correcto usa el valor total del cliente, no el del primer proyecto.</p>
+            </div>
+          </details>
         </div>
       </section>
 
@@ -340,14 +465,30 @@
               <tbody id="sens"></tbody>
             </table>
           </div>
-          <p class="note">Para los <b id="sensN">&mdash;</b> clientes del mix actual. Cada punto ganado en <b>MQL&rarr;Oportunidad</b> vale mucho m&aacute;s que cualquier euro extra de presupuesto: es la palanca m&aacute;s barata del funnel.</p>
+          <p class="note" id="sensNote"></p>
+
+          <details class="how">
+            <summary>C&oacute;mo leer esta tabla</summary>
+            <div class="inner">
+              <p>Es la misma cuenta del funnel, repetida para cada combinaci&oacute;n posible de las dos tasas. Cada celda responde: <b>si mis tasas terminan siendo estas, ¿cu&aacute;ntos MQLs necesito?</b></p>
+              <span class="f">MQLs = clientes del mix &divide; ( MQL&rarr;Opp &times; Opp&rarr;Won )</span>
+              <p>Las <b>filas</b> son MQL&rarr;Oportunidad (de tu 7,1 % actual hasta 20 %). Las <b>columnas</b> son Oportunidad&rarr;Cliente (15 % a 30 %). La fila con borde negro es donde est&aacute; tu slider ahora, y la celda con borde es tu combinaci&oacute;n exacta.</p>
+              <p>Los colores comparan contra los <b>182 MQLs</b> que generaste en 2025, porque eso es lo que sabés que pod&eacute;s hacer:</p>
+              <ul>
+                <li><span class="pill g">verde</span> &nbsp;hasta 2,2x tu volumen 2025 &mdash; alcanzable.</li>
+                <li><span class="pill w">&aacute;mbar</span> &nbsp;entre 2,2x y 4x &mdash; exigente, hay que revisar si el tr&aacute;fico da.</li>
+                <li><span class="pill b">rojo</span> &nbsp;m&aacute;s de 4x &mdash; poco realista sin cambiar la estrategia de captaci&oacute;n.</li>
+              </ul>
+              <p>Para qué sirve: mir&aacute; c&oacute;mo se derrumba el n&uacute;mero al moverte <b>hacia abajo</b> (mejor cualificaci&oacute;n) contra moverte <b>hacia la derecha</b> (mejor cierre). Bajar una fila suele ahorrar muchos m&aacute;s MQLs que correrse una columna &mdash; y arreglar la cualificaci&oacute;n es m&aacute;s barato y m&aacute;s r&aacute;pido que arreglar el cierre. Esa es la palanca por donde conviene empezar.</p>
+            </div>
+          </details>
         </div>
       </section>
     </div>
   </div>
 
   <footer>
-    <span>Base 2025 &middot; 27.000 &euro; invertidos (13.127 &euro; variable + 13.873 &euro; estructura) &middot; 28.200 &euro; facturados &middot; ROI 1,04x</span>
+    <span>Base 2025 &middot; 182 MQLs &rarr; 13 oportunidades &rarr; 2 clientes &middot; 27.000 &euro; invertidos (13.127 &euro; variable + 13.873 &euro; estructura) &middot; 28.200 &euro; facturados &middot; ROI 1,04x</span>
     <button class="reset" id="reset">Volver a los valores por defecto</button>
   </footer>
 </div>
@@ -355,11 +496,8 @@
 <script>
 "use strict";
 
-/* ---------- base real 2025 ---------- */
-var B = {
-  mqls:182, opps:13, clients:2, revenue:28200,
-  investTotal:27000, investVar:13127
-};
+/* ================== base real 2025 ================== */
+var B = { mqls:182, opps:13, clients:2, revenue:28200, investTotal:27000, investVar:13127 };
 B.fixed  = B.investTotal - B.investVar;   // 13.873
 B.cpm    = B.investVar / B.mqls;          // 72,13
 B.r1     = B.opps / B.mqls;               // 7,14 %
@@ -375,26 +513,52 @@ var SERVICES = [
   {id:"ad", name:"Adopción IA",  price:2500 },
   {id:"ic", name:"Infra y CIBER",     price:2000 }
 ];
+var IDS = SERVICES.map(function(s){ return s.id; });
 
-/* todos los presets suman exactamente 200.000 EUR */
+/* ================== escenarios ==================
+   share = % del objetivo que aporta ese servicio
+   fixed = cantidad fija de proyectos (no escala con el objetivo)   */
 var PRESETS = [
-  {id:"rec",   label:"Recomendado · 3 DW", qty:{dw:3,ag:4,gd:3,ad:2,ic:0},   r1:15, r2:25},
-  {id:"onedw", label:"Un solo DW",              qty:{dw:1,ag:6,gd:5,ad:2,ic:0},   r1:15, r2:25},
-  {id:"nodw",  label:"Sin DW",                  qty:{dw:0,ag:7,gd:6,ad:2,ic:0},   r1:15, r2:25},
-  {id:"conc",  label:"Concentrado · 5 DW", qty:{dw:5,ag:2,gd:1,ad:2,ic:0},   r1:15, r2:25},
-  {id:"equi",  label:"Equilibrado",             qty:{dw:2,ag:4,gd:3,ad:6,ic:10},  r1:15, r2:25},
-  {id:"vol",   label:"Volumen",                 qty:{dw:0,ag:4,gd:4,ad:16,ic:20}, r1:15, r2:25},
-  {id:"lin",   label:"Tasas 2025 (lineal)",     qty:{dw:3,ag:4,gd:3,ad:2,ic:0},   r1:7.1, r2:15}
+  { id:"rec",   label:"Recomendado",
+    spec:{dw:{share:.45}, ag:{share:.28}, gd:{share:.24}, ad:{share:.03}},
+    r1:15, r2:25,
+    why:"Tope del 45 % en Digital Workplace: el servicio más rentable, pero no conviene que más de la mitad del año dependa de él." },
+  { id:"onedw", label:"Un solo DW",
+    spec:{dw:{fixed:1}, ag:{share:.45}, gd:{share:.37}, ad:{share:.03}},
+    r1:15, r2:25,
+    why:"Un único proyecto flagship y el resto en el tramo de 15.000 €, que es el que ya demostraste que sabés cerrar." },
+  { id:"nodw",  label:"Sin DW",
+    spec:{dw:{fixed:0}, ag:{share:.50}, gd:{share:.47}, ad:{share:.03}},
+    r1:15, r2:25,
+    why:"Cero dependencia del flagship. Más clientes, más MQLs y más carga de entrega, pero ningún punto único de fallo." },
+  { id:"conc",  label:"Concentrado",
+    spec:{dw:{share:.75}, ag:{share:.15}, gd:{share:.07}, ad:{share:.03}},
+    r1:15, r2:25,
+    why:"Máxima eficiencia de marketing: el mínimo de clientes posible. Todo el riesgo está en cerrar los proyectos grandes." },
+  { id:"equi",  label:"Equilibrado",
+    spec:{dw:{share:.30}, ag:{share:.30}, gd:{share:.22}, ad:{share:.08}, ic:{share:.10}},
+    r1:15, r2:25,
+    why:"Cartera repartida entre los cinco servicios. Cuesta bastante más en marketing porque los tickets bajos arrastran el promedio." },
+  { id:"vol",   label:"Volumen",
+    spec:{dw:{fixed:0}, ag:{share:.30}, gd:{share:.30}, ad:{share:.20}, ic:{share:.20}},
+    r1:15, r2:25,
+    why:"Muchos clientes de ticket bajo. Sirve para ganar logos y base instalada, pero como plan de facturación es el más caro de todos." },
+  { id:"lin",   label:"Tasas 2025",
+    spec:{dw:{share:.45}, ag:{share:.28}, gd:{share:.24}, ad:{share:.03}},
+    r1:7.1, r2:15,
+    why:"El mix recomendado pero sin mejorar nada de la conversión. Sirve para ver por qué el objetivo no sale solo con más presupuesto." }
 ];
 
 var DEFAULTS = {
   qty:{dw:3,ag:4,gd:3,ad:2,ic:0},
   price:{dw:30000,ag:15000,gd:15000,ad:2500,ic:2000},
-  target:200000, budget:51400, reserve:8000, r1:15, r2:25,
-  cpm:Math.round(B.cpm), fixed:B.fixed, cycle:3
+  target:200000, budget:51400, reserve:8000,
+  r1:15, r2:25,
+  cpm:Math.round(B.cpm), fixed:B.fixed, cycle:3,
+  preset:"rec"
 };
 
-var KEY = "funnel-planner-v1";
+var KEY = "funnel-planner-v2";
 var S = load();
 
 function clone(o){ return JSON.parse(JSON.stringify(o)); }
@@ -404,62 +568,129 @@ function load(){
   try{
     var raw = localStorage.getItem(KEY);
     if(!raw) return d;
-    var p = JSON.parse(raw);
-    var out = clone(DEFAULTS), k;
-    for(k in p){ if(k!=="qty" && k!=="price" && typeof p[k]==="number") out[k]=p[k]; }
-    if(p.qty)   for(k in out.qty)   if(typeof p.qty[k]==="number")   out.qty[k]=p.qty[k];
-    if(p.price) for(k in out.price) if(typeof p.price[k]==="number") out.price[k]=p.price[k];
-    return out;
-  }catch(e){ return d; }
+    var p = JSON.parse(raw), k;
+    for(k in d){
+      if(k === "qty" || k === "price") continue;
+      if(k === "preset"){ if(typeof p.preset === "string" || p.preset === null) d.preset = p.preset; continue; }
+      if(typeof p[k] === "number" && isFinite(p[k])) d[k] = p[k];
+    }
+    if(p.qty)   for(k in d.qty)   if(typeof p.qty[k] === "number")   d.qty[k] = p.qty[k];
+    if(p.price) for(k in d.price) if(typeof p.price[k] === "number" && p.price[k] > 0) d.price[k] = p.price[k];
+    return d;
+  }catch(e){ return clone(DEFAULTS); }
 }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
 
-/* ---------- formato ---------- */
-/* de-DE en vez de es-ES: misma notacion (1.234,5) pero agrupa a partir
-   de 4 digitos, que es-ES deja sin separador ("2000" en vez de "2.000") */
-var nf = new Intl.NumberFormat("de-DE", {maximumFractionDigits:1});
-function eur(n){ return nf.format(Math.round(n)) + " €"; }
-function eurK(n){ return n>=10000 ? nf.format(Math.round(n/1000))+"k €" : eur(n); }
+/* ================== formato ================== */
+var nf = new Intl.NumberFormat("es-ES");
+/* separador de miles propio: es-ES no agrupa los numeros de 4 cifras */
+function group(n){
+  var v = Math.round(Math.abs(n)), s = String(v), out = "", i;
+  for(i = 0; i < s.length; i++){
+    if(i > 0 && (s.length - i) % 3 === 0) out += ".";
+    out += s.charAt(i);
+  }
+  return (n < 0 ? "−" : "") + out;
+}
+function eur(n){ return group(n) + " €"; }
+function eurK(n){ return n >= 10000 ? group(n/1000) + "k €" : eur(n); }
 function pct(n){ return nf.format(Math.round(n*1000)/10) + " %"; }
-function mult(n){
-  var s = n<10 ? n.toFixed(2) : n.toFixed(1);
-  return s.replace(".",",") + "x";
+function mult(n){ return (n < 10 ? n.toFixed(2) : n.toFixed(1)).replace(".", ",") + "x"; }
+
+/* ================== generador de mix ==================
+   Reparte el objetivo segun los pesos del escenario y completa
+   el resto con el proyecto mas caro que todavia quepa.          */
+function buildMix(target, spec){
+  var qty = {}, cap = {}, want = {}, i, s, sp;
+  for(i = 0; i < IDS.length; i++) qty[IDS[i]] = 0;
+
+  /* 1. cantidades fijas, y cuota por peso con su techo */
+  for(i = 0; i < SERVICES.length; i++){
+    s = SERVICES[i]; sp = spec[s.id];
+    if(!sp || S.price[s.id] <= 0) continue;
+    if(typeof sp.fixed === "number"){ qty[s.id] = sp.fixed; continue; }
+    if(sp.share){
+      want[s.id] = target * sp.share;
+      qty[s.id]  = Math.floor(want[s.id] / S.price[s.id]);
+      cap[s.id]  = Math.ceil(want[s.id] / S.price[s.id]);
+    }
+  }
+
+  var fillable = SERVICES.filter(function(x){ return cap[x.id] !== undefined; });
+  if(!fillable.length) return qty;
+
+  function total(){ return IDS.reduce(function(a,k){ return a + qty[k]*S.price[k]; }, 0); }
+  var gap = target - total(), guard = 0;
+
+  /* 2. completo el resto priorizando al servicio mas lejos de su cuota,
+        sin pasarse de su techo (asi un servicio barato no se come el mix) */
+  while(gap > 0 && guard++ < 500){
+    var pick = null, bestDef = -Infinity, def;
+    for(i = 0; i < fillable.length; i++){
+      s = fillable[i];
+      if(qty[s.id] >= cap[s.id] || S.price[s.id] > gap) continue;
+      def = want[s.id] - qty[s.id]*S.price[s.id];
+      if(def > bestDef){ bestDef = def; pick = s; }
+    }
+    if(!pick) break;
+    qty[pick.id]++; gap -= S.price[pick.id];
+  }
+
+  /* 3. si sobra hueco, un unico proyecto extra si deja el total mas cerca del objetivo */
+  if(gap > 0){
+    var best = null, bestErr = gap;
+    for(i = 0; i < fillable.length; i++){
+      s = fillable[i];
+      var err = Math.abs(gap - S.price[s.id]);
+      if(err < bestErr){ bestErr = err; best = s; }
+    }
+    if(best) qty[best.id]++;
+  }
+  return qty;
 }
 
-/* ---------- calculo ---------- */
+function applyPreset(id){
+  var p = null, i;
+  for(i = 0; i < PRESETS.length; i++) if(PRESETS[i].id === id) p = PRESETS[i];
+  if(!p) return;
+  S.qty = buildMix(S.target, p.spec);
+  S.r1 = p.r1; S.r2 = p.r2; S.preset = p.id;
+  save(); syncInputs(); render();
+}
+
+/* ================== calculo ================== */
 function calc(){
-  var revenue = 0, clients = 0, i;
-  for(i=0;i<SERVICES.length;i++){
-    revenue += S.qty[SERVICES[i].id] * S.price[SERVICES[i].id];
-    clients += S.qty[SERVICES[i].id];
+  var revenue = 0, clients = 0, i, id;
+  for(i = 0; i < SERVICES.length; i++){
+    id = SERVICES[i].id;
+    revenue += S.qty[id] * S.price[id];
+    clients += S.qty[id];
   }
   var r1 = S.r1/100, r2 = S.r2/100;
   var opps = clients ? clients/r2 : 0;
   var mqls = clients ? opps/r1 : 0;
-  var varCost = mqls * S.cpm;
-  var invest  = varCost + S.fixed;
-  var sellingMonths = Math.max(1, 12 - S.cycle);
+  var cpm  = S.cpm > 0 ? S.cpm : 1;
 
-  /* restriccion de presupuesto: lo que queda para medios despues de
-     estructura y reserva de conversion fija el techo de MQLs, y de ahi
-     sale la conversion MQL->Cliente minima que el plan obliga a alcanzar */
-  var media = Math.max(0, S.budget - S.fixed - S.reserve);
-  var afford = S.cpm ? media/S.cpm : 0;
-  var commit = varCost + S.fixed + S.reserve;
+  var mediaSpend = mqls * cpm;                 /* lo que hay que gastar en medios */
+  var media      = Math.max(0, S.budget - S.reserve);  /* lo que hay disponible  */
+  var affordable = media / cpm;                /* techo de MQLs                  */
+  var committed  = mediaSpend + S.reserve;     /* uso total del presupuesto      */
+  var sellingMonths = Math.max(1, 12 - S.cycle);
 
   return {
     revenue:revenue, clients:clients, r1:r1, r2:r2,
     opps:Math.ceil(opps), mqls:Math.ceil(mqls),
-    varCost:varCost, invest:invest,
-    media:media, afford:Math.floor(afford), commit:commit,
-    over: commit - S.budget,
-    unused: Math.max(0, S.budget - commit),
-    slack: Math.floor(afford) - Math.ceil(mqls),
-    minRate: afford ? clients/afford : 0,
-    maxClients: Math.floor(afford * r1 * r2),
-    roi: invest ? revenue/invest : 0,
-    cac: clients ? invest/clients : 0,
-    cacVar: (r1*r2) ? S.cpm/(r1*r2) : 0,
+    mediaSpend:mediaSpend,
+    invest: mediaSpend + S.fixed,
+    media:media, affordable:Math.floor(affordable),
+    committed:committed,
+    over: committed - S.budget,
+    slack: Math.floor(affordable) - Math.ceil(mqls),
+    minRate: affordable > 0 ? clients/affordable : 0,
+    maxClients: Math.floor(affordable * r1 * r2),
+    roi: (mediaSpend + S.fixed) ? revenue/(mediaSpend + S.fixed) : 0,
+    cac: clients ? (mediaSpend + S.fixed)/clients : 0,
+    cacVar: (r1*r2) ? cpm/(r1*r2) : 0,
     ticket: clients ? revenue/clients : 0,
     perMonth: mqls/12,
     perMonthFront: mqls/sellingMonths,
@@ -468,7 +699,7 @@ function calc(){
   };
 }
 
-/* ---------- render ---------- */
+/* ================== render ================== */
 function renderPresets(){
   var host = document.getElementById("presets");
   PRESETS.forEach(function(p){
@@ -476,12 +707,8 @@ function renderPresets(){
     b.className = "chip";
     b.textContent = p.label;
     b.setAttribute("data-id", p.id);
-    b.onclick = function(){
-      var k;
-      for(k in S.qty) S.qty[k] = p.qty[k] || 0;
-      S.r1 = p.r1; S.r2 = p.r2;
-      save(); syncInputs(); render();
-    };
+    b.setAttribute("title", p.why);
+    b.onclick = function(){ applyPreset(p.id); };
     host.appendChild(b);
   });
 }
@@ -494,10 +721,12 @@ function renderMix(){
     row.className = "svc" + (S.qty[s.id] === 0 ? " zero" : "");
     row.innerHTML =
       '<div><div class="name">' + s.name + '</div>' +
-      '<div class="price"><input type="number" step="500" min="0" value="' + S.price[s.id] + '" data-price="' + s.id + '" aria-label="Precio de ' + s.name + '"><span>€ por proyecto</span></div></div>' +
+      '<div class="price"><input type="number" step="500" min="0" value="' + S.price[s.id] +
+        '" data-price="' + s.id + '" aria-label="Precio de ' + s.name + '"><span>€ por proyecto</span></div></div>' +
       '<div class="stepper">' +
         '<button data-dec="' + s.id + '" aria-label="Restar">−</button>' +
-        '<input type="number" min="0" step="1" value="' + S.qty[s.id] + '" data-qty="' + s.id + '" aria-label="Cantidad de ' + s.name + '">' +
+        '<input type="number" min="0" step="1" value="' + S.qty[s.id] + '" data-qty="' + s.id +
+          '" aria-label="Cantidad de ' + s.name + '">' +
         '<button data-inc="' + s.id + '" aria-label="Sumar">+</button>' +
       '</div>';
     host.appendChild(row);
@@ -512,157 +741,34 @@ function renderMix(){
   host.querySelectorAll("[data-qty]").forEach(function(i){
     i.oninput = function(){
       S.qty[i.getAttribute("data-qty")] = Math.max(0, Math.floor(+i.value || 0));
-      save(); render({keepMix:true});
+      S.preset = null; save(); render({keepMix:true});
     };
   });
   host.querySelectorAll("[data-price]").forEach(function(i){
     i.oninput = function(){
-      S.price[i.getAttribute("data-price")] = Math.max(0, +i.value || 0);
+      S.price[i.getAttribute("data-price")] = Math.max(1, +i.value || 1);
       save(); render({keepMix:true});
     };
   });
 }
 function bump(id, d){
   S.qty[id] = Math.max(0, S.qty[id] + d);
-  save(); render();
+  S.preset = null; save(); render();
 }
 
-function renderBudget(c){
-  var band = document.getElementById("bband");
-  var tight = c.afford ? (c.slack / c.afford) < 0.10 : true;
-
-  if(c.over > 1){
-    band.className = "bband over";
-    band.textContent = "✗ Este mix se pasa " + eur(c.over) + " del presupuesto — pide " +
-      nf.format(c.mqls) + " MQLs y con " + eur(S.budget) + " sólo entran " + nf.format(c.afford) + ".";
-  }else if(tight){
-    band.className = "bband tight";
-    band.textContent = "⚠ Entra justo — sobran " + nf.format(Math.max(0,c.slack)) +
-      " MQLs de margen (" + eur(c.unused) + "). Sin colchón si la conversión falla.";
+function renderRevenue(c){
+  document.getElementById("revenue").textContent = eur(c.revenue);
+  var g = document.getElementById("gap"), diff = c.revenue - S.target;
+  if(Math.abs(diff) < 1){
+    g.className = "ok";
+    g.textContent = "✓ Da exactamente el objetivo de " + eur(S.target);
+  }else if(diff < 0){
+    g.className = "under";
+    g.textContent = "Faltan " + eur(-diff) + " para el objetivo de " + eur(S.target);
   }else{
-    band.className = "bband ok";
-    band.textContent = "✓ Entra con holgura — " + nf.format(c.slack) +
-      " MQLs de margen (" + eur(c.unused) + " sin asignar).";
+    g.className = "over";
+    g.textContent = "Sobran " + eur(diff) + " sobre el objetivo de " + eur(S.target);
   }
-
-  /* barra de asignacion del presupuesto */
-  var segs = [
-    {k:"Estructura",  v:S.fixed,   c:"#9aa0ac"},
-    {k:"Medios",      v:c.varCost, c:"#2f5fd8"},
-    {k:"Conversión",  v:S.reserve, c:"#5aa37c"},
-    {k:"Sin asignar", v:c.unused,  c:"#dcdcd4"}
-  ];
-  var tot = Math.max(S.budget, c.commit);
-  document.getElementById("balloc").innerHTML = segs.map(function(s){
-    return s.v > 0 ? '<i style="width:' + (s.v/tot*100) + '%;background:' + s.c + '"></i>' : "";
-  }).join("");
-  document.getElementById("blegend").innerHTML = segs.map(function(s){
-    return s.v > 0
-      ? '<span><em style="background:' + s.c + '"></em>' + s.k + ' <b>' + eur(s.v) + '</b></span>'
-      : "";
-  }).join("");
-
-  /* la tasa minima que obliga el presupuesto, contra la que estas asumiendo */
-  var assumed = c.r1 * c.r2;
-  var rateCls = c.minRate > assumed ? "bad" : c.minRate > assumed*0.85 ? "warn" : "good";
-  var stats = [
-    {k:"MQLs que compra",  v:nf.format(c.afford),
-     s:eur(c.media) + " en medios"},
-    {k:"MQLs que pide",    v:nf.format(c.mqls),
-     s:"para " + nf.format(c.clients) + " clientes"},
-    {k:"Conv. mínima",     v:pct(c.minRate), cls:rateCls,
-     s:"asumís " + pct(assumed)},
-    {k:"Techo de clientes",v:nf.format(c.maxClients),
-     s:"con este presupuesto"}
-  ];
-  document.getElementById("bstats").innerHTML = stats.map(function(s){
-    return '<div class="bstat"><div class="k">' + s.k + '</div>' +
-      '<div class="v' + (s.cls ? " " + s.cls : "") + '">' + s.v + '</div>' +
-      '<div class="s">' + s.s + '</div></div>';
-  }).join("");
-
-  document.getElementById("bnote").innerHTML =
-    "Con " + eur(S.budget) + " menos " + eur(S.fixed) + " de estructura y " + eur(S.reserve) +
-    " de reserva quedan <b>" + eur(c.media) + "</b> para generar demanda: <b>" +
-    nf.format(c.afford) + " MQLs</b>. Para cerrar " + nf.format(c.clients) +
-    " clientes con esos MQLs necesitás una conversión MQL→Cliente de <b>" + pct(c.minRate) +
-    "</b> (hoy estás en " + pct(B.r1*B.r2) + "). " +
-    (c.minRate > assumed
-      ? "Es más exigente que las tasas que tenés puestas arriba: el presupuesto no alcanza para este mix."
-      : "Las tasas que tenés puestas dan de sobra, así que el presupuesto no es el cuello de botella — la conversión sí.") +
-    " Cada euro que muevas de medios a la reserva de conversión baja los MQLs que podés comprar y sube la tasa que estás obligado a alcanzar.";
-}
-
-function renderFunnel(c){
-  var host = document.getElementById("funnel");
-  var max = Math.max(c.mqls, 1);
-  var stages = [
-    { nm:"MQLs", sub:"leads calificados", q:c.mqls, base:B.mqls, meta:[
-      "<b>" + nf.format(Math.ceil(c.perMonth)) + "</b>/mes a ritmo plano",
-      "<b>" + nf.format(Math.ceil(c.perMonthFront)) + "</b>/mes concentrados en " + c.sellingMonths + " meses",
-      "coste <b>" + eur(c.varCost) + "</b>"
-    ]},
-    { nm:"Oportunidades", sub:pct(c.r1) + " de los MQLs", q:c.opps, base:B.opps, meta:[
-      "<b>" + (Math.round(c.oppsPerMonth*10)/10).toFixed(1).replace(".",",") + "</b>/mes",
-      "coste por oportunidad <b>" + eur(c.opps ? c.varCost/c.opps : 0) + "</b>"
-    ]},
-    { nm:"Clientes", sub:pct(c.r2) + " de las oportunidades", q:c.clients, base:B.clients, meta:[
-      "ticket medio <b>" + eur(c.ticket) + "</b>",
-      "MQL→Cliente <b>" + pct(c.r1*c.r2) + "</b>"
-    ]}
-  ];
-  host.innerHTML = stages.map(function(s){
-    var x = s.base ? s.q/s.base : 0;
-    return '<div class="stage">' +
-      '<div class="row1"><div class="nm">' + s.nm + ' <span>' + s.sub + '</span></div>' +
-      '<div class="qty">' + nf.format(s.q) + '</div></div>' +
-      '<div class="bar"><i style="width:' + Math.max(1.2, (s.q/max)*100) + '%"></i></div>' +
-      '<div class="meta">' + s.meta.map(function(m){ return "<span>" + m + "</span>"; }).join("") +
-      '<span style="margin-left:auto">vs 2025 &middot; <b>' + mult(x) + '</b></span></div></div>';
-  }).join("");
-}
-
-function renderUnit(c){
-  var host = document.getElementById("unit");
-  host.innerHTML = SERVICES.map(function(s){
-    var q = S.qty[s.id], rev = q*S.price[s.id];
-    var ratio = c.cacVar ? S.price[s.id]/c.cacVar : 0;
-    var cls = ratio >= 3 ? "g" : ratio >= 1.5 ? "w" : "b";
-    return '<tr class="' + (q ? "" : "dim") + '"><td>' + s.name + '</td><td>' + eur(S.price[s.id]) + '</td>' +
-      '<td>' + q + '</td><td>' + (rev ? eur(rev) : "—") + '</td>' +
-      '<td><span class="pill ' + cls + '">' + mult(ratio) + '</span></td></tr>';
-  }).join("");
-
-  var bad = SERVICES.filter(function(s){
-    return c.cacVar && (S.price[s.id]/c.cacVar) < 1.5;
-  });
-  var names = bad.map(function(s){ return s.name; }).join(" y ");
-  document.getElementById("unitNote").innerHTML =
-    "Con estas tasas, adquirir un cliente cuesta <b>" + eur(c.cacVar) +
-    "</b> de gasto variable (coste por MQL ÷ conversión MQL→Cliente de " + pct(c.r1*c.r2) + "). " +
-    (bad.length
-      ? "<b>" + names + "</b> " + (bad.length > 1 ? "quedan" : "queda") +
-        " por debajo de 1,5x: " + (bad.length > 1 ? "no se sostienen" : "no se sostiene") +
-        " como captación por marketing pago. Van por referido, upsell o comercial directo — o como puerta de entrada a un proyecto grande."
-      : "Todos los servicios del mix aguantan la captación por marketing.");
-}
-
-function renderSens(c){
-  var rows = [7.1, 10, 12, 15, 20];
-  var cols = [15, 20, 25, 30];
-  document.getElementById("sensN").textContent = nf.format(c.clients);
-  document.getElementById("sens").innerHTML = rows.map(function(r){
-    var isCur = Math.abs(r - S.r1) < 1.3;
-    var tds = cols.map(function(k){
-      var n = c.clients ? Math.ceil(c.clients / ((r/100)*(k/100))) : 0;
-      var x = B.mqls ? n/B.mqls : 0;
-      var cls = x > 4 ? "hot" : x > 2.2 ? "mid" : "cool";
-      return '<td class="' + cls + '">' + nf.format(n) + '</td>';
-    }).join("");
-    return '<tr class="' + (isCur ? "cur" : "") + '"><td>' +
-      nf.format(r) + " %" + (Math.abs(r - 7.1) < 0.05 ? " · hoy" : "") +
-      '</td>' + tds + '</tr>';
-  }).join("");
 }
 
 function renderKpis(c){
@@ -672,52 +778,183 @@ function renderKpis(c){
     el.innerHTML = d;
     el.className = "d num" + (cls ? " " + cls : "");
   }
-  set("kInv", eurK(c.invest), eur(c.varCost) + " variable + " + eur(S.fixed) + " fijo");
+  set("kInv", eurK(c.invest), eur(c.mediaSpend) + " medios + " + eur(S.fixed) + " estructura");
   set("kRoi", mult(c.roi), "2025: " + mult(B.roi), c.roi > B.roi ? "up" : "dn");
   set("kCac", eur(c.cac), "2025: " + eur(B.cac), c.cac < B.cac ? "up" : "dn");
-  set("kTkt", eur(c.ticket), "2025: " + eur(B.ticket), c.ticket > B.ticket ? "up" : "dn");
+  set("kTkt", eurK(c.ticket), "2025: " + eurK(B.ticket), c.ticket > B.ticket ? "up" : "dn");
 }
 
-function renderRevenue(c){
-  document.getElementById("revenue").textContent = eur(c.revenue);
-  var g = document.getElementById("gap");
-  var diff = c.revenue - S.target;
-  if(Math.abs(diff) < 1){
-    g.className = "ok";
-    g.textContent = "✓ Da exactamente el objetivo de " + eur(S.target);
-  }else if(diff < 0){
-    var need = Math.ceil(-diff/15000);
-    g.className = "under";
-    g.textContent = "Faltan " + eur(-diff) + " — unos " + need + " proyecto" + (need > 1 ? "s" : "") + " de 15.000 €";
+function renderBudget(c){
+  var band = document.getElementById("bband");
+  var ratio = S.budget ? c.committed/S.budget : 0;
+  if(c.over > 1){
+    band.className = "bband over";
+    band.textContent = "✕ Se pasa " + eur(c.over) + " del presupuesto — necesita " +
+      eur(c.committed) + " y tenés " + eur(S.budget);
+  }else if(ratio > 0.9){
+    band.className = "bband tight";
+    band.textContent = "⚠ Entra justo — usa " + eur(c.committed) + " de " + eur(S.budget) +
+      " (" + Math.round(ratio*100) + " %), casi sin margen";
   }else{
-    g.className = "over";
-    g.textContent = "Sobran " + eur(diff) + " sobre el objetivo (" + mult(S.target ? c.revenue/S.target : 0) + " del objetivo)";
+    band.className = "bband ok";
+    band.textContent = "✓ Entra — usa " + eur(c.committed) + " de " + eur(S.budget) +
+      " y sobran " + eur(S.budget - c.committed);
   }
+
+  /* barra de asignacion */
+  var used  = Math.min(c.mediaSpend, S.budget);
+  var res   = Math.min(S.reserve, Math.max(0, S.budget - used));
+  var free  = Math.max(0, S.budget - used - res);
+  var total = S.budget || 1;
+  var segs = [
+    {w:used/total*100, c:"var(--accent)", k:"Medios (MQLs)",       v:eur(c.mediaSpend)},
+    {w:res /total*100, c:"#5fa37c",       k:"Reserva conversión", v:eur(S.reserve)},
+    {w:free/total*100, c:"#dededa",       k:"Sin asignar",         v:eur(free)}
+  ];
+  document.getElementById("balloc").innerHTML = segs.map(function(s){
+    return s.w > 0.4 ? '<i style="width:' + s.w + '%;background:' + s.c + '"></i>' : "";
+  }).join("");
+  document.getElementById("blegend").innerHTML = segs.map(function(s){
+    return '<span><em style="background:' + s.c + '"></em>' + s.k + " <b>" + s.v + "</b></span>";
+  }).join("");
+
+  /* stats */
+  var slackPct = c.affordable ? c.slack/c.affordable : 0;
+  var rateCls  = c.minRate > c.r1*c.r2 ? "bad" : c.minRate > (c.r1*c.r2)*0.85 ? "warn" : "good";
+  var stats = [
+    {k:"MQLs que compra",  v:group(c.affordable),
+     s:eur(c.media) + " ÷ " + eur(S.cpm) + " por MQL"},
+    {k:"MQLs que necesita", v:group(c.mqls),
+     s:"con tasas de " + pct(c.r1) + " y " + pct(c.r2)},
+    {k:"Holgura", v:(c.slack >= 0 ? "+" : "−") + group(c.slack),
+     s:c.slack >= 0 ? Math.round(slackPct*100) + " % de margen" : "faltan MQLs",
+     cls:c.slack < 0 ? "bad" : slackPct < 0.1 ? "warn" : "good"},
+    {k:"Conversión mínima", v:pct(c.minRate),
+     s:"asumís " + pct(c.r1*c.r2) + " · 2025 fue 1,1 %", cls:rateCls}
+  ];
+  document.getElementById("bstats").innerHTML = stats.map(function(x){
+    return '<div class="bstat"><div class="k">' + x.k + '</div>' +
+      '<div class="v' + (x.cls ? " " + x.cls : "") + '">' + x.v + '</div>' +
+      '<div class="s">' + x.s + '</div></div>';
+  }).join("");
+
+  document.getElementById("bnote").innerHTML =
+    "Con " + eur(S.budget) + " y " + eur(S.reserve) + " reservados para conversión, el techo son <b>" +
+    group(c.affordable) + " MQLs</b> (" + mult(B.mqls ? c.affordable/B.mqls : 0) +
+    " lo de 2025). A las tasas que estás asumiendo eso da para <b>" + group(c.maxClients) +
+    " clientes</b> como máximo" +
+    (c.ticket ? ", o sea <b>" + eur(c.maxClients * c.ticket) + "</b> al ticket medio de este mix." : ".") +
+    (c.over > 1
+      ? " El mix actual no cabe: bajá el objetivo, subí el presupuesto, mové el mix a ticket más alto o mejorá las tasas."
+      : " El presupuesto no es el cuello de botella: lo es la conversión.");
+}
+
+function renderFunnel(c){
+  var host = document.getElementById("funnel");
+  var max = Math.max(c.mqls, 1);
+  var stages = [
+    { cls:"s1", nm:"MQLs", sub:"leads calificados", q:c.mqls, base:B.mqls, meta:[
+      "<b>" + group(c.perMonth) + "</b>/mes a ritmo plano",
+      "<b>" + group(Math.ceil(c.perMonthFront)) + "</b>/mes concentrados en " + c.sellingMonths + " meses",
+      "medios <b>" + eur(c.mediaSpend) + "</b>"
+    ]},
+    { cls:"s2", nm:"Oportunidades", sub:pct(c.r1) + " de los MQLs", q:c.opps, base:B.opps, meta:[
+      "<b>" + (Math.round(c.oppsPerMonth*10)/10).toFixed(1).replace(".", ",") + "</b>/mes",
+      "coste por oportunidad <b>" + eur(c.opps ? c.mediaSpend/c.opps : 0) + "</b>"
+    ]},
+    { cls:"s3", nm:"Clientes", sub:pct(c.r2) + " de las oportunidades", q:c.clients, base:B.clients, meta:[
+      "ticket medio <b>" + eur(c.ticket) + "</b>",
+      "MQL→Cliente <b>" + pct(c.r1*c.r2) + "</b>"
+    ]}
+  ];
+  host.innerHTML = stages.map(function(s){
+    var x = s.base ? s.q/s.base : 0;
+    return '<div class="stage ' + s.cls + '">' +
+      '<div class="row1"><div class="nm">' + s.nm + ' <span>' + s.sub + '</span></div>' +
+      '<div class="qty">' + group(s.q) + '</div></div>' +
+      '<div class="bar"><i style="width:' + Math.max(1.2, (s.q/max)*100) + '%"></i></div>' +
+      '<div class="meta">' + s.meta.map(function(m){ return "<span>" + m + "</span>"; }).join("") +
+      '<span style="margin-left:auto">vs 2025 · <b>' + mult(x) + '</b></span></div></div>';
+  }).join("");
+}
+
+function renderUnit(c){
+  document.getElementById("unit").innerHTML = SERVICES.map(function(s){
+    var q = S.qty[s.id], rev = q*S.price[s.id];
+    var ratio = c.cacVar ? S.price[s.id]/c.cacVar : 0;
+    var cls = ratio >= 3 ? "g" : ratio >= 1.5 ? "w" : "b";
+    return '<tr class="' + (q ? "" : "dim") + '"><td>' + s.name + '</td><td>' + eur(S.price[s.id]) + '</td>' +
+      '<td>' + q + '</td><td>' + (rev ? eur(rev) : "—") + '</td>' +
+      '<td><span class="pill ' + cls + '">' + mult(ratio) + '</span></td></tr>';
+  }).join("");
+
+  var bad = SERVICES.filter(function(s){ return c.cacVar && (S.price[s.id]/c.cacVar) < 1.5; });
+  var names = bad.map(function(s){ return s.name; }).join(" y ");
+  document.getElementById("unitNote").innerHTML =
+    "Con estas tasas, adquirir un cliente cuesta <b>" + eur(c.cacVar) +
+    "</b> de inversión en medios — " + eur(S.cpm) + " por MQL ÷ " + pct(c.r1*c.r2) +
+    " de conversión de punta a punta. " +
+    (bad.length
+      ? "<b>" + names + "</b> " + (bad.length > 1 ? "quedan" : "queda") + " por debajo de 1,5x: " +
+        (bad.length > 1 ? "no se sostienen" : "no se sostiene") +
+        " como captación por marketing pago. Van por referido, upsell o comercial directo."
+      : "Todos los servicios del mix aguantan la captación por marketing.");
+}
+
+function renderSens(c){
+  var rows = [7.1, 10, 12, 15, 20], cols = [15, 20, 25, 30];
+  document.getElementById("sens").innerHTML = rows.map(function(r){
+    var isCurRow = Math.abs(r - S.r1) < 1.3;
+    var tds = cols.map(function(k){
+      var n = c.clients ? Math.ceil(c.clients / ((r/100)*(k/100))) : 0;
+      var x = B.mqls ? n/B.mqls : 0;
+      var cls = x > 4 ? "hot" : x > 2.2 ? "mid" : "cool";
+      if(isCurRow && Math.abs(k - S.r2) < 2.5) cls += " pick";
+      return '<td class="' + cls + '">' + group(n) + '</td>';
+    }).join("");
+    return '<tr class="' + (isCurRow ? "cur" : "") + '"><td>' + nf.format(r) + " %" +
+      (Math.abs(r - 7.1) < 0.05 ? " · hoy" : "") + '</td>' + tds + '</tr>';
+  }).join("");
+
+  var best = c.clients ? Math.ceil(c.clients/(0.20*0.30)) : 0;
+  var worst = c.clients ? Math.ceil(c.clients/(0.071*0.15)) : 0;
+  document.getElementById("sensNote").innerHTML =
+    "Para los <b>" + group(c.clients) + " clientes</b> de este mix. De la esquina peor a la mejor el número va de <b>" +
+    group(worst) + "</b> a <b>" + group(best) + "</b> MQLs — " +
+    mult(best ? worst/best : 0) + " de diferencia, sin tocar un euro de presupuesto. " +
+    "Tu presupuesto de " + eur(S.budget) + " compra <b>" + group(c.affordable) +
+    " MQLs</b>: todo lo que esté por encima de esa cifra es inalcanzable.";
 }
 
 function markPresets(){
-  var cur = SERVICES.map(function(s){ return S.qty[s.id]; }).join(",");
   document.querySelectorAll(".chip").forEach(function(b){
-    var id = b.getAttribute("data-id");
-    var p = null, i;
-    for(i=0;i<PRESETS.length;i++) if(PRESETS[i].id === id) p = PRESETS[i];
-    if(!p) return;
-    var same = SERVICES.map(function(s){ return p.qty[s.id] || 0; }).join(",") === cur &&
-               Math.abs(p.r1 - S.r1) < 0.05 && Math.abs(p.r2 - S.r2) < 0.05;
-    b.classList.toggle("on", same);
+    b.classList.toggle("on", b.getAttribute("data-id") === S.preset);
   });
+  var p = null, i;
+  for(i = 0; i < PRESETS.length; i++) if(PRESETS[i].id === S.preset) p = PRESETS[i];
+  document.querySelector(".presetnote").innerHTML = p
+    ? "<b>" + p.label + "</b> — " + p.why
+    : "Mix manual. Tocá un escenario para que se recalcule solo según el objetivo, o usá el botón de mix recomendado.";
 }
 
 function paintRange(el){
   var p = ((el.value - el.min)/(el.max - el.min))*100;
-  el.style.setProperty("--pct", p + "%");
+  el.style.setProperty("--pct", Math.max(0, Math.min(100, p)) + "%");
 }
 
 function syncInputs(){
-  ["target","budget","reserve","r1","r2","cpm","fixed","cycle"].forEach(function(k){
-    document.getElementById(k).value = S[k];
+  ["target","budget","r1","r2","cpm","fixed","cycle","reserve"].forEach(function(k){
+    var el = document.getElementById(k);
+    if(el) el.value = S[k];
   });
-  ["r1","r2","cycle"].forEach(function(id){ paintRange(document.getElementById(id)); });
+  document.getElementById("targetR").value = Math.min(500000, Math.max(50000, S.target));
+  document.getElementById("budgetR").value = Math.min(150000, S.budget);
+  ["r1","r2","cycle","reserve","targetR","budgetR"].forEach(function(id){
+    paintRange(document.getElementById(id));
+  });
+  document.getElementById("targetv").textContent  = eurK(S.target);
+  document.getElementById("budgetv").textContent  = eurK(S.budget);
+  document.getElementById("reservev").textContent = eur(S.reserve);
   document.getElementById("r1v").textContent = nf.format(S.r1) + " %";
   document.getElementById("r2v").textContent = nf.format(S.r2) + " %";
   document.getElementById("cyclev").textContent =
@@ -728,25 +965,52 @@ function render(opt){
   opt = opt || {};
   if(!opt.keepMix) renderMix();
   var c = calc();
-  renderRevenue(c); renderKpis(c); renderBudget(c); renderFunnel(c);
-  renderUnit(c); renderSens(c); markPresets();
+  renderRevenue(c); renderKpis(c); renderBudget(c);
+  renderFunnel(c); renderUnit(c); renderSens(c); markPresets();
 }
 
-/* ---------- wiring ---------- */
+/* ================== wiring ================== */
 renderPresets();
 syncInputs();
 render();
 
-["r1","r2","cycle"].forEach(function(id){
+/* objetivo: si hay escenario activo, el mix se regenera para el nuevo objetivo */
+function setTarget(v){
+  S.target = Math.max(0, v || 0);
+  if(S.preset){
+    var p = null, i;
+    for(i = 0; i < PRESETS.length; i++) if(PRESETS[i].id === S.preset) p = PRESETS[i];
+    if(p) S.qty = buildMix(S.target, p.spec);
+  }
+  save(); syncInputs(); render();
+}
+document.getElementById("target").oninput  = function(){ setTarget(+this.value); };
+document.getElementById("targetR").oninput = function(){ setTarget(+this.value); };
+document.getElementById("applyRec").onclick = function(){ applyPreset("rec"); };
+
+/* presupuesto: numero y slider sincronizados */
+function setBudget(v){
+  S.budget = Math.max(0, v || 0);
+  if(S.reserve > S.budget) S.reserve = S.budget;
+  save(); syncInputs(); render({keepMix:true});
+}
+document.getElementById("budget").oninput  = function(){ setBudget(+this.value); };
+document.getElementById("budgetR").oninput = function(){ setBudget(+this.value); };
+
+["r1","r2","cycle","reserve"].forEach(function(id){
   var el = document.getElementById(id);
   el.oninput = function(){
-    S[id] = +el.value; paintRange(el); save(); syncInputs(); render({keepMix:true});
+    S[id] = +el.value;
+    if(id === "r1" || id === "r2") S.preset = null;
+    if(id === "reserve" && S.reserve > S.budget) S.reserve = S.budget;
+    save(); syncInputs(); render({keepMix:true});
   };
 });
-["target","budget","reserve","cpm","fixed"].forEach(function(id){
+["cpm","fixed"].forEach(function(id){
   var el = document.getElementById(id);
   el.oninput = function(){
-    S[id] = Math.max(0, +el.value || 0); save(); render({keepMix:true});
+    S[id] = Math.max(id === "cpm" ? 1 : 0, +el.value || 0);
+    save(); render({keepMix:true});
   };
 });
 document.getElementById("reset").onclick = function(){
