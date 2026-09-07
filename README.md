@@ -3,6 +3,8 @@
 Herramienta interactiva para dimensionar el funnel de marketing necesario para un objetivo de
 facturación anual. Ponés el objetivo y el presupuesto, y te devuelve el mix de servicios
 recomendado más los MQLs, oportunidades y clientes que hacen falta, con inversión, ROI y CAC.
+La segunda pestaña hace la cuenta inversa: partís de un ROAS y te dice cuánto habría que
+facturar y si el funnel da para tanto.
 
 **En vivo:** https://facubelini.github.io/funnel-planner/
 
@@ -108,6 +110,54 @@ hasta 2,2x, ámbar hasta 4x, rojo por encima. Sirve para ver que bajar una fila 
 ahorra muchos más MQLs que correrse una columna (mejor cierre) — y arreglar la cualificación es más
 barato y más rápido.
 
+## Calculadora de ROAS (segunda pestaña)
+
+El planificador parte del objetivo de facturación. La calculadora va al revés: partís del **retorno
+que querés sacarle a cada euro invertido** y sale cuánto habría que facturar.
+
+```
+facturación = ROAS × inversión
+```
+
+La inversión se puede medir de dos formas, y el mismo año da números muy distintos según cuál uses
+— 2025 fue **1,04x** sobre inversión total y **2,15x** sobre medios:
+
+| Base | Denominador | Para qué sirve |
+| --- | --- | --- |
+| Sólo medios | presupuesto | medir la eficacia de la pauta |
+| Medios + estructura | presupuesto + estructura anual | ver si el área se paga sola |
+
+Después baja de euros a MQLs con el ticket medio y las tasas del planificador, y compara contra lo
+que el presupuesto puede pagar:
+
+```
+clientes necesarios = techo( facturación / ticket medio del mix )
+MQLs necesarios     = clientes / (MQL→Opp × Opp→Won)
+MQLs que compra     = (presupuesto − reserva) / coste por MQL
+```
+
+Si los MQLs necesarios entran en los que compra el presupuesto, el ROAS es alcanzable sin tocar
+nada. Si no, el bloque *Qué tendría que pasar para llegar* muestra las tres salidas, cada una
+resolviendo el hueco sola:
+
+```
+ticket necesario      = facturación / clientes que paga el presupuesto
+conversión necesaria  = clientes necesarios / MQLs que compra
+presupuesto necesario = MQLs necesarios × coste por MQL + reserva
+```
+
+La más barata casi siempre es el **ticket**: mover el mix hacia servicios caros no cuesta un euro
+más de medios. El **ROAS máximo alcanzable** cierra el círculo — con el presupuesto, las tasas y el
+ticket actuales, es el techo real, y hay un botón que lo carga directamente.
+
+La tabla de escenarios repite la cuenta de 1x a 10x con la inversión fija. Como la inversión no se
+mueve, cada punto de ROAS suma siempre la misma facturación y pide MQLs en la misma proporción: en
+este modelo no hay economía de escala, el único atajo es el ticket medio.
+
+Las dos pestañas comparten el mismo estado: el presupuesto, las tasas y el ticket son los mismos de
+un lado y del otro, y el botón *Usar esta facturación como objetivo* lleva la cifra al planificador
+y regenera el mix para ella.
+
 ## Qué se puede editar
 
 - Cantidad y **precio** de cada servicio
@@ -117,6 +167,7 @@ barato y más rápido.
 - Coste por MQL y coste de estructura anual
 - Ciclo de venta — recalcula la cadencia mensual de MQLs sobre los meses que realmente cierran
   dentro del año (los MQLs de los últimos meses no llegan a convertir)
+- ROAS objetivo y base de cálculo, en la segunda pestaña
 
 Cada bloque tiene un desplegable *Cómo se calcula* con las fórmulas y el criterio detrás de cada
 número. Los cambios quedan guardados en `localStorage`, así que la pestaña recuerda el último mix.

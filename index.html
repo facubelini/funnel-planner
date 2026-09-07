@@ -56,6 +56,48 @@
   .presetnote{font-size:11.5px;color:var(--muted);margin:11px 0 0}
   .presetnote b{color:var(--ink-2);font-weight:600}
 
+  /* ---------- tabs ---------- */
+  .tabs{display:flex;gap:26px;margin:26px 0 -23px}
+  .tab{
+    appearance:none;border:0;background:none;padding:0 0 12px;font:inherit;font-size:13.5px;
+    font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;
+    transition:color .13s,border-color .13s;
+  }
+  .tab:hover{color:var(--ink-2)}
+  .tab.on{color:var(--ink);border-bottom-color:var(--ink)}
+
+  /* ---------- calculadora roas ---------- */
+  .hero{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px 20px 20px;
+  }
+  .hero .k{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:650}
+  .hero .v{font-size:42px;font-weight:680;letter-spacing:-.03em;line-height:1.02;margin-top:8px;font-variant-numeric:tabular-nums}
+  @media (max-width:520px){.hero .v{font-size:32px}}
+  .hero .eq{
+    margin-top:14px;padding-top:13px;border-top:1px solid var(--line-2);
+    font-family:var(--mono);font-size:12px;color:var(--ink-2);line-height:1.7;
+  }
+  .hero .eq em{color:var(--muted);font-style:normal}
+  .segmented{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface-2)}
+  .segmented button{
+    flex:1;border:0;background:none;padding:8px 6px;font:inherit;font-size:12.5px;font-weight:550;
+    color:var(--ink-2);cursor:pointer;transition:background .12s,color .12s;
+  }
+  .segmented button + button{border-left:1px solid var(--line)}
+  .segmented button:hover{background:#ecece6}
+  .segmented button.on{background:var(--ink);color:#fff}
+  .lever{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+  @media (max-width:720px){.lever{grid-template-columns:1fr}}
+  .lever .k{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:650}
+  .lever .v{font-size:20px;font-weight:650;margin-top:5px;font-variant-numeric:tabular-nums;letter-spacing:-.015em}
+  .lever .s{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.5}
+  .lever .v.good{color:var(--good)}
+  .lever .v.warn{color:var(--warn)}
+  .lever .v.bad{color:var(--bad)}
+  tr.hl td{background:var(--accent-soft);font-weight:600}
+  tr.hl td:first-child{border-left:2px solid var(--accent)}
+
   /* ---------- layout ---------- */
   .grid{display:grid;grid-template-columns:400px minmax(0,1fr);gap:26px;margin-top:26px;align-items:start}
   @media (max-width:1020px){.grid{grid-template-columns:1fr}}
@@ -240,9 +282,16 @@
     <div class="eyebrow">Marketing &middot; Planificaci&oacute;n anual</div>
     <h1>Planificador de funnel</h1>
     <p class="sub">Pon&eacute; el <b>objetivo de facturaci&oacute;n</b> y el <b>presupuesto</b>, y la herramienta te devuelve el mix de servicios recomendado y los <b>MQLs</b>, <b>oportunidades</b> y <b>clientes</b> que hacen falta. Todo arranca de la base real de <b>2025</b>: 182 MQLs &rarr; 13 oportunidades &rarr; 2 clientes &rarr; 28.200 &euro;.</p>
-    <div class="presets" id="presets"><span class="lbl">Escenarios</span></div>
-    <p class="presetnote">Los escenarios se recalculan solos para el objetivo que pongas: cambian el reparto entre servicios, no la cifra a facturar.</p>
+    <nav class="tabs" id="tabs">
+      <button class="tab on" data-tab="plan">Planificador</button>
+      <button class="tab" data-tab="roas">Calculadora de ROAS</button>
+    </nav>
   </header>
+
+  <div data-panel="plan">
+
+  <div class="presets" id="presets"><span class="lbl">Escenarios</span></div>
+  <p class="presetnote">Los escenarios se recalculan solos para el objetivo que pongas: cambian el reparto entre servicios, no la cifra a facturar.</p>
 
   <div class="grid">
 
@@ -487,6 +536,145 @@
     </div>
   </div>
 
+  </div><!-- /panel plan -->
+
+  <!-- ================= PANEL: CALCULADORA DE ROAS ================= -->
+  <div data-panel="roas" hidden>
+    <p class="presetnote" style="margin-top:22px">Al rev&eacute;s que el planificador: en vez de partir del objetivo de facturaci&oacute;n, part&iacute;s del <b>retorno que quer&eacute;s sacarle a cada euro invertido</b> y la herramienta te dice cu&aacute;nto habr&iacute;a que facturar y si el funnel da para tanto.</p>
+
+    <div class="grid">
+
+      <!-- ---------- controles ---------- -->
+      <div>
+        <section class="card">
+          <h2>Par&aacute;metros del retorno</h2>
+          <div class="body">
+            <div class="field">
+              <div class="head"><label for="roas">ROAS objetivo</label><span class="val" id="roasv"></span></div>
+              <div class="txtfield"><input type="number" id="roas" step="0.1" min="0.1"><span style="color:var(--muted)">x</span></div>
+              <input type="range" id="roasR" min="0.5" max="10" step="0.1" style="margin-top:10px">
+              <div class="base">Euros facturados por cada euro invertido. 2025 cerr&oacute; en <b>1,04x</b> sobre inversi&oacute;n total y <b>2,15x</b> sobre medios.</div>
+            </div>
+
+            <div class="field">
+              <div class="head"><label>Sobre qu&eacute; inversi&oacute;n se mide</label></div>
+              <div class="segmented" id="roasBase">
+                <button data-base="media" type="button">S&oacute;lo medios</button>
+                <button data-base="total" type="button">Medios + estructura</button>
+              </div>
+              <div class="base" id="roasBaseNote"></div>
+            </div>
+
+            <div class="field">
+              <div class="head"><label for="roasBudget">Presupuesto a invertir</label><span class="val" id="roasBudgetv"></span></div>
+              <div class="txtfield"><input type="number" id="roasBudget" step="1000" min="0"><span style="color:var(--muted)">&euro;</span></div>
+              <input type="range" id="roasBudgetR" min="0" max="150000" step="1000" style="margin-top:10px">
+              <div class="base">Es el <b>mismo presupuesto</b> del planificador: si lo tocás ac&aacute;, cambia all&aacute;.</div>
+            </div>
+
+            <div class="field">
+              <div class="head"><label for="roasTicket">Ticket medio</label><span class="val" id="roasTicketv"></span></div>
+              <div class="base" id="roasTicketNote"></div>
+            </div>
+
+            <details class="how">
+              <summary>Qu&eacute; es el ROAS y qu&eacute; no</summary>
+              <div class="inner">
+                <p><b>ROAS</b> (return on ad spend) es la cuenta m&aacute;s simple del marketing: cu&aacute;nto factur&aacute;s por cada euro que invert&iacute;s.</p>
+                <span class="f">ROAS = facturaci&oacute;n &divide; inversi&oacute;n<br><em>2025: 28.200 &euro; &divide; 27.000 &euro; = 1,04x</em></span>
+                <p>La calculadora da vuelta la f&oacute;rmula: fij&aacute;s el ROAS y sale la facturaci&oacute;n.</p>
+                <span class="f">facturaci&oacute;n = ROAS &times; inversi&oacute;n</span>
+                <p><b>Cuidado con la base.</b> El mismo a&ntilde;o da 1,04x o 2,15x seg&uacute;n qu&eacute; metas en el denominador. <b>S&oacute;lo medios</b> mide la eficacia de la pauta; <b>medios + estructura</b> mide si el &aacute;rea se paga sola. Para comprometer un n&uacute;mero con direcci&oacute;n, us&aacute; el segundo.</p>
+                <p>Y algo que el ROAS no dice: es <b>facturaci&oacute;n, no margen</b>. Un ROAS de 3x sobre proyectos con 30 % de margen deja menos plata que un 2x sobre proyectos con 60 %. Sirve para dimensionar el funnel, no para decidir rentabilidad.</p>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Llevarlo al plan</h2>
+          <div class="body">
+            <p class="note" style="margin:0 0 4px" id="bridgeNote"></p>
+            <button class="btn" id="useAsTarget">Usar esta facturaci&oacute;n como objetivo</button>
+            <button class="btn ghost" id="useMaxRoas">Poner el ROAS m&aacute;ximo alcanzable</button>
+          </div>
+        </section>
+      </div>
+
+      <!-- ---------- resultados ---------- -->
+      <div>
+        <div class="hero">
+          <div class="k">Facturaci&oacute;n estimada</div>
+          <div class="v" id="roasRevenue">&mdash;</div>
+          <div class="eq" id="roasEq"></div>
+        </div>
+
+        <section class="card">
+          <h2>&iquest;El funnel da para tanto?</h2>
+          <div class="body">
+            <div id="roasBand" class="bband"></div>
+            <div class="bstats" id="roasStats"></div>
+            <p class="note" id="roasNote"></p>
+
+            <details class="how">
+              <summary>C&oacute;mo se comprueba</summary>
+              <div class="inner">
+                <p>La facturaci&oacute;n que sale del ROAS es s&oacute;lo una cifra: hay que ver si el funnel la puede producir. Se baja de euros a clientes y de clientes a MQLs, con el ticket medio y las tasas del planificador.</p>
+                <span class="f">clientes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= facturaci&oacute;n &divide; ticket medio<br>oportunidades = clientes &divide; (Opp&rarr;Won)<br>MQLs &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= oportunidades &divide; (MQL&rarr;Opp)</span>
+                <p>Y ese n&uacute;mero de MQLs se compara contra los que el presupuesto puede pagar:</p>
+                <span class="f">MQLs que compra = ( presupuesto &minus; reserva ) &divide; coste por MQL</span>
+                <p>Si los MQLs que hacen falta entran en los que compr&aacute;s, el ROAS es alcanzable con lo que ya asumiste. Si no, hay que mover una de las tres palancas de abajo.</p>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Qu&eacute; tendr&iacute;a que pasar para llegar</h2>
+          <div class="body">
+            <div class="lever" id="roasLevers"></div>
+            <p class="note" id="leverNote"></p>
+
+            <details class="how">
+              <summary>C&oacute;mo sale cada palanca</summary>
+              <div class="inner">
+                <p>Tres formas distintas de cerrar el mismo hueco. Cada una deja las otras dos quietas.</p>
+                <span class="f">ticket necesario &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= facturaci&oacute;n &divide; clientes que da el presupuesto<br>conversi&oacute;n necesaria = clientes necesarios &divide; MQLs que compra<br>presupuesto necesario = MQLs necesarios &times; coste por MQL + reserva</span>
+                <p>La de <b>ticket</b> se mueve cambiando el mix hacia servicios m&aacute;s caros; la de <b>conversi&oacute;n</b>, cualificando y cerrando mejor; la de <b>presupuesto</b>, pidiendo m&aacute;s plata. En la pr&aacute;ctica el plan real usa un poco de las tres.</p>
+                <p>Los colores comparan contra lo que ya ten&eacute;s puesto en el planificador: verde si el n&uacute;mero necesario es igual o mejor que el actual, &aacute;mbar si pide hasta un 30 % m&aacute;s, rojo si pide m&aacute;s que eso.</p>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Escenarios de ROAS</h2>
+          <div class="body">
+            <table>
+              <thead><tr><th>ROAS</th><th>Facturaci&oacute;n</th><th>Clientes</th><th>MQLs</th><th>&iquest;Entra?</th></tr></thead>
+              <tbody id="roasTable"></tbody>
+            </table>
+            <p class="note" id="roasTableNote"></p>
+
+            <details class="how">
+              <summary>C&oacute;mo leer la tabla</summary>
+              <div class="inner">
+                <p>Es la misma cuenta repetida para varios niveles de ROAS, con tu inversi&oacute;n, tu ticket y tus tasas fijos. La fila resaltada es el ROAS que ten&eacute;s puesto arriba.</p>
+                <p><b>Clientes</b> y <b>MQLs</b> se redondean para arriba: medio cliente no existe. La &uacute;ltima columna compara los MQLs de la fila contra los que compra el presupuesto.</p>
+                <ul>
+                  <li><span class="pill g">entra</span> &nbsp;el presupuesto paga esos MQLs.</li>
+                  <li><span class="pill w">justo</span> &nbsp;se pasa hasta un 15 %: se resuelve con eficiencia, no con m&aacute;s plata.</li>
+                  <li><span class="pill b">no entra</span> &nbsp;se pasa m&aacute;s del 15 %: hace falta otro presupuesto, otro ticket u otras tasas.</li>
+                </ul>
+                <p>El salto entre filas es lo interesante: como la inversi&oacute;n est&aacute; fija, subir un punto de ROAS sube siempre la misma cantidad de facturaci&oacute;n, y los MQLs necesarios suben en la misma proporci&oacute;n. No hay econom&iacute;a de escala en este modelo &mdash; el &uacute;nico atajo es el ticket medio.</p>
+              </div>
+            </details>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div><!-- /panel roas -->
+
   <footer>
     <span>Base 2025 &middot; 182 MQLs &rarr; 13 oportunidades &rarr; 2 clientes &middot; 27.000 &euro; invertidos (13.127 &euro; variable + 13.873 &euro; estructura) &middot; 28.200 &euro; facturados &middot; ROI 1,04x</span>
     <button class="reset" id="reset">Volver a los valores por defecto</button>
@@ -555,7 +743,8 @@ var DEFAULTS = {
   target:200000, budget:51400, reserve:8000,
   r1:15, r2:25,
   cpm:Math.round(B.cpm), fixed:B.fixed, cycle:3,
-  preset:"rec"
+  preset:"rec",
+  roas:3, roasBase:"media", tab:"plan"
 };
 
 var KEY = "funnel-planner-v2";
@@ -572,6 +761,8 @@ function load(){
     for(k in d){
       if(k === "qty" || k === "price") continue;
       if(k === "preset"){ if(typeof p.preset === "string" || p.preset === null) d.preset = p.preset; continue; }
+      if(k === "roasBase"){ if(p.roasBase === "media" || p.roasBase === "total") d.roasBase = p.roasBase; continue; }
+      if(k === "tab"){ if(p.tab === "plan" || p.tab === "roas") d.tab = p.tab; continue; }
       if(typeof p[k] === "number" && isFinite(p[k])) d[k] = p[k];
     }
     if(p.qty)   for(k in d.qty)   if(typeof p.qty[k] === "number")   d.qty[k] = p.qty[k];
@@ -596,6 +787,11 @@ function eur(n){ return group(n) + " €"; }
 function eurK(n){ return n >= 10000 ? group(n/1000) + "k €" : eur(n); }
 function pct(n){ return nf.format(Math.round(n*1000)/10) + " %"; }
 function mult(n){ return (n < 10 ? n.toFixed(2) : n.toFixed(1)).replace(".", ",") + "x"; }
+/* el ROAS se escribe corto: 3x, 2,5x — no 3,00x */
+function roasFmt(n){
+  var r = Math.round(n*10)/10;
+  return (r % 1 === 0 ? String(r) : r.toFixed(1).replace(".", ",")) + "x";
+}
 
 /* ================== generador de mix ==================
    Reparte el objetivo segun los pesos del escenario y completa
@@ -926,6 +1122,171 @@ function renderSens(c){
     " MQLs</b>: todo lo que esté por encima de esa cifra es inalcanzable.";
 }
 
+/* ================== calculadora de ROAS ==================
+   Va al reves que el planificador: parte del retorno buscado
+   y baja hasta los MQLs que harian falta para sostenerlo.      */
+function roasCalc(c){
+  var media  = S.budget;
+  var base   = S.roasBase === "total" ? media + S.fixed : media;
+  var goal   = S.roas * base;
+  var ticket = c.ticket || B.ticket;
+
+  /* los clientes se redondean para arriba antes de subir por el funnel:
+     medio proyecto no existe, y asi coincide con la tabla de escenarios */
+  var clientsNeed = ticket ? Math.ceil(goal/ticket) : 0;
+  var oppsNeed    = c.r2 ? clientsNeed/c.r2 : 0;
+  var mqlsNeed    = c.r1 ? oppsNeed/c.r1 : 0;
+
+  var maxRevenue = c.maxClients * ticket;
+
+  return {
+    media:media, base:base, goal:goal, ticket:ticket,
+    clientsNeed:clientsNeed, oppsNeed:Math.ceil(oppsNeed), mqlsNeed:Math.ceil(mqlsNeed),
+    affordable:c.affordable, maxClients:c.maxClients,
+    maxRevenue:maxRevenue,
+    maxRoas: base ? maxRevenue/base : 0,
+    fits: Math.ceil(mqlsNeed) <= c.affordable,
+    excess: Math.ceil(mqlsNeed) - c.affordable,
+    ticketNeed:  c.maxClients ? goal/c.maxClients : 0,
+    rateNeed:    c.affordable ? clientsNeed/c.affordable : 0,
+    budgetNeed:  Math.ceil(mqlsNeed)*S.cpm + S.reserve,
+    curRate: c.r1*c.r2
+  };
+}
+
+function renderRoas(c){
+  var r = roasCalc(c);
+
+  /* --- base de calculo --- */
+  document.querySelectorAll("#roasBase button").forEach(function(b){
+    b.classList.toggle("on", b.getAttribute("data-base") === S.roasBase);
+  });
+  document.getElementById("roasBaseNote").innerHTML = S.roasBase === "total"
+    ? "Presupuesto <b>" + eur(S.budget) + "</b> + estructura <b>" + eur(S.fixed) + "</b> = <b>" +
+      eur(r.base) + "</b>. Es el ROAS que le podés mostrar a dirección."
+    : "S&oacute;lo el presupuesto de medios: <b>" + eur(r.base) +
+      "</b>. Mide la eficacia de la pauta, deja la estructura afuera.";
+
+  /* --- cifra grande --- */
+  document.getElementById("roasRevenue").textContent = eur(r.goal);
+  document.getElementById("roasEq").innerHTML =
+    "facturaci&oacute;n = ROAS &times; inversi&oacute;n<br>" +
+    "<em>" + roasFmt(S.roas) + " &times; " + eur(r.base) + " = " + eur(r.goal) + "</em>";
+
+  /* --- veredicto --- */
+  var band = document.getElementById("roasBand");
+  if(r.fits){
+    band.className = "bband ok";
+    band.textContent = "✓ Alcanzable — pide " + group(r.mqlsNeed) + " MQLs y el presupuesto compra " +
+      group(r.affordable) + ", sobran " + group(r.affordable - r.mqlsNeed);
+  }else if(r.excess <= r.affordable*0.15){
+    band.className = "bband tight";
+    band.textContent = "⚠ Queda justo — pide " + group(r.mqlsNeed) + " MQLs y el presupuesto compra " +
+      group(r.affordable) + ", faltan " + group(r.excess);
+  }else{
+    band.className = "bband over";
+    band.textContent = "✕ No sale con estos números — pide " + group(r.mqlsNeed) +
+      " MQLs y el presupuesto compra " + group(r.affordable) + ", faltan " + group(r.excess);
+  }
+
+  /* --- desglose --- */
+  var stats = [
+    {k:"Clientes necesarios", v:group(r.clientsNeed),
+     s:eur(r.goal) + " ÷ " + eur(r.ticket) + " de ticket"},
+    {k:"Oportunidades", v:group(r.oppsNeed),
+     s:"a " + pct(c.r2) + " de cierre"},
+    {k:"MQLs necesarios", v:group(r.mqlsNeed),
+     s:"a " + pct(c.r1) + " de cualificación",
+     cls:r.fits ? "good" : "bad"},
+    {k:"ROAS m&aacute;ximo hoy", v:roasFmt(r.maxRoas),
+     s:group(r.maxClients) + " clientes × " + eur(r.ticket) + " ÷ " + eur(r.base),
+     cls:r.maxRoas >= S.roas ? "good" : "warn"}
+  ];
+  document.getElementById("roasStats").innerHTML = stats.map(function(x){
+    return '<div class="bstat"><div class="k">' + x.k + '</div>' +
+      '<div class="v' + (x.cls ? " " + x.cls : "") + '">' + x.v + '</div>' +
+      '<div class="s">' + x.s + '</div></div>';
+  }).join("");
+
+  document.getElementById("roasNote").innerHTML =
+    "Con " + eur(S.budget) + " de presupuesto, " + eur(S.reserve) + " de reserva y las tasas actuales, " +
+    "el techo real es <b>" + group(r.maxClients) + " clientes</b> = <b>" + eur(r.maxRevenue) +
+    "</b>, o sea un ROAS de <b>" + roasFmt(r.maxRoas) + "</b> sobre " +
+    (S.roasBase === "total" ? "inversión total" : "medios") + ". " +
+    (r.maxRoas >= S.roas
+      ? "Tu objetivo de " + roasFmt(S.roas) + " está por debajo de ese techo: entra sin cambiar nada del plan."
+      : "Tu objetivo de " + roasFmt(S.roas) + " está por encima de ese techo, así que no se llega " +
+        "sólo poniendo el número: hay que mover ticket, tasas o presupuesto.");
+
+  /* --- palancas --- */
+  function lvlCls(need, cur, lowerIsBetter){
+    if(!cur) return "";
+    var x = lowerIsBetter ? cur/need : need/cur;
+    return x <= 1 ? "good" : x <= 1.3 ? "warn" : "bad";
+  }
+  var levers = [
+    {k:"Ticket medio necesario", v:eur(r.ticketNeed),
+     s:"hoy " + eur(r.ticket) + " · " + eur(r.goal) + " ÷ " + group(r.maxClients) + " clientes que paga el presupuesto",
+     cls:lvlCls(r.ticketNeed, r.ticket, false)},
+    {k:"Conversi&oacute;n necesaria", v:pct(r.rateNeed),
+     s:"hoy " + pct(r.curRate) + " de punta a punta · " + group(r.clientsNeed) + " clientes ÷ " + group(r.affordable) + " MQLs",
+     cls:lvlCls(r.rateNeed, r.curRate, false)},
+    {k:"Presupuesto necesario", v:eur(r.budgetNeed),
+     s:"hoy " + eur(S.budget) + " · " + group(r.mqlsNeed) + " MQLs × " + eur(S.cpm) + " + " + eur(S.reserve) + " de reserva",
+     cls:lvlCls(r.budgetNeed, S.budget, false)}
+  ];
+  document.getElementById("roasLevers").innerHTML = levers.map(function(x){
+    return '<div><div class="k">' + x.k + '</div>' +
+      '<div class="v' + (x.cls ? " " + x.cls : "") + '">' + x.v + '</div>' +
+      '<div class="s">' + x.s + '</div></div>';
+  }).join("");
+
+  document.getElementById("leverNote").innerHTML = r.fits
+    ? "Ya llegás con lo que tenés puesto: estas tres cifras están en o por debajo de tus valores actuales. " +
+      "El margen que sobra es de <b>" + group(r.affordable - r.mqlsNeed) + " MQLs</b>, que es lo que te cubre si alguna tasa no sale."
+    : "Cualquiera de las tres, sola, cierra el hueco. La más barata casi siempre es el <b>ticket</b> — " +
+      "cambiar el mix hacia Digital Workplace o Agentes IA no cuesta un euro más de medios, " +
+      "mientras que llegar a " + eur(r.budgetNeed) + " de presupuesto son " + eur(r.budgetNeed - S.budget) + " que hay que pedir.";
+
+  /* --- tabla de escenarios --- */
+  var levels = [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10], i, exact = false;
+  for(i = 0; i < levels.length; i++) if(Math.abs(levels[i] - S.roas) < 0.05) exact = true;
+  if(!exact && S.roas > 0){ levels.push(Math.round(S.roas*10)/10); levels.sort(function(a,b){ return a-b; }); }
+
+  document.getElementById("roasTable").innerHTML = levels.map(function(x){
+    var rev = x * r.base;
+    var cl  = r.ticket ? Math.ceil(rev/r.ticket) : 0;
+    var mq  = (c.r1*c.r2) ? Math.ceil(cl/(c.r1*c.r2)) : 0;
+    var over = mq - r.affordable;
+    var cls  = over <= 0 ? "g" : over <= r.affordable*0.15 ? "w" : "b";
+    var txt  = over <= 0 ? "entra" : over <= r.affordable*0.15 ? "justo" : "no entra";
+    var cur  = Math.abs(x - S.roas) < 0.05;
+    return '<tr class="' + (cur ? "hl" : (over > 0 ? "dim" : "")) + '"><td>' + roasFmt(x) + '</td>' +
+      '<td>' + eur(rev) + '</td><td>' + group(cl) + '</td><td>' + group(mq) + '</td>' +
+      '<td><span class="pill ' + cls + '">' + txt + '</span></td></tr>';
+  }).join("");
+
+  document.getElementById("roasTableNote").innerHTML =
+    "Todo con la inversi&oacute;n fija de <b>" + eur(r.base) + "</b>, ticket de <b>" + eur(r.ticket) +
+    "</b> y conversi&oacute;n de punta a punta de <b>" + pct(r.curRate) + "</b>. " +
+    "El presupuesto compra <b>" + group(r.affordable) + " MQLs</b>: ese es el corte. " +
+    "Cada punto de ROAS suma <b>" + eur(r.base) + "</b> de facturaci&oacute;n y pide " +
+    group(r.ticket ? Math.ceil((r.base/r.ticket)/(c.r1*c.r2)) : 0) + " MQLs m&aacute;s.";
+
+  /* --- puente con el planificador --- */
+  document.getElementById("bridgeNote").innerHTML =
+    "El planificador est&aacute; en <b>" + eur(S.target) + "</b> de objetivo; esta calculadora da <b>" +
+    eur(r.goal) + "</b>" +
+    (Math.abs(r.goal - S.target) < 1 ? " — son el mismo n&uacute;mero." :
+      ". Si lo llev&aacute;s, el mix se regenera para esa cifra.");
+
+  /* --- inputs propios --- */
+  document.getElementById("roasTicketv").textContent = eur(r.ticket);
+  document.getElementById("roasTicketNote").innerHTML =
+    "Sale del mix del planificador: <b>" + eur(c.revenue) + "</b> &divide; <b>" + group(c.clients) +
+    " clientes</b>. Para cambiarlo, cambi&aacute; el mix.";
+}
+
 function markPresets(){
   document.querySelectorAll(".chip").forEach(function(b){
     b.classList.toggle("on", b.getAttribute("data-id") === S.preset);
@@ -959,6 +1320,16 @@ function syncInputs(){
   document.getElementById("r2v").textContent = nf.format(S.r2) + " %";
   document.getElementById("cyclev").textContent =
     S.cycle === 0 ? "inmediato" : S.cycle + " mes" + (S.cycle > 1 ? "es" : "");
+
+  /* calculadora de ROAS */
+  document.getElementById("roas").value  = Math.round(S.roas*10)/10;
+  document.getElementById("roasR").value = Math.min(10, Math.max(0.5, S.roas));
+  document.getElementById("roasv").textContent = roasFmt(S.roas);
+  document.getElementById("roasBudget").value  = S.budget;
+  document.getElementById("roasBudgetR").value = Math.min(150000, S.budget);
+  document.getElementById("roasBudgetv").textContent = eurK(S.budget);
+  paintRange(document.getElementById("roasR"));
+  paintRange(document.getElementById("roasBudgetR"));
 }
 
 function render(opt){
@@ -966,7 +1337,7 @@ function render(opt){
   if(!opt.keepMix) renderMix();
   var c = calc();
   renderRevenue(c); renderKpis(c); renderBudget(c);
-  renderFunnel(c); renderUnit(c); renderSens(c); markPresets();
+  renderFunnel(c); renderUnit(c); renderSens(c); markPresets(); renderRoas(c);
 }
 
 /* ================== wiring ================== */
@@ -1014,7 +1385,50 @@ document.getElementById("budgetR").oninput = function(){ setBudget(+this.value);
   };
 });
 document.getElementById("reset").onclick = function(){
-  S = clone(DEFAULTS); save(); syncInputs(); render();
+  var tab = S.tab;
+  S = clone(DEFAULTS); S.tab = tab; save(); syncInputs(); render();
+};
+
+/* ================== pestañas ================== */
+function setTab(t){
+  S.tab = t; save();
+  document.querySelectorAll("[data-panel]").forEach(function(el){
+    el.hidden = el.getAttribute("data-panel") !== t;
+  });
+  document.querySelectorAll(".tab").forEach(function(b){
+    b.classList.toggle("on", b.getAttribute("data-tab") === t);
+  });
+}
+document.querySelectorAll(".tab").forEach(function(b){
+  b.onclick = function(){ setTab(b.getAttribute("data-tab")); };
+});
+setTab(S.tab);
+
+/* ================== controles de la calculadora ================== */
+function setRoas(v){
+  S.roas = Math.max(0.1, Math.min(50, v || 0.1));
+  save(); syncInputs(); render({keepMix:true});
+}
+document.getElementById("roas").oninput  = function(){ setRoas(+this.value); };
+document.getElementById("roasR").oninput = function(){ setRoas(+this.value); };
+document.getElementById("roasBudget").oninput  = function(){ setBudget(+this.value); };
+document.getElementById("roasBudgetR").oninput = function(){ setBudget(+this.value); };
+
+document.querySelectorAll("#roasBase button").forEach(function(b){
+  b.onclick = function(){
+    S.roasBase = b.getAttribute("data-base");
+    save(); render({keepMix:true});
+  };
+});
+
+document.getElementById("useAsTarget").onclick = function(){
+  var r = roasCalc(calc());
+  setTarget(Math.round(r.goal/1000)*1000);
+  setTab("plan");
+};
+document.getElementById("useMaxRoas").onclick = function(){
+  var r = roasCalc(calc());
+  setRoas(Math.floor(r.maxRoas*10)/10);
 };
 </script>
 </body>
