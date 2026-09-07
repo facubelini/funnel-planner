@@ -222,7 +222,9 @@
   .blegend em{width:8px;height:8px;border-radius:2px;display:block;flex:none}
   .blegend b{color:var(--ink-2);font-weight:600;font-variant-numeric:tabular-nums}
   .bstats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line-2)}
-  @media (max-width:720px){.bstats{grid-template-columns:1fr 1fr}}
+  .bstats.five{grid-template-columns:repeat(5,1fr)}
+  @media (max-width:900px){.bstats.five{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:720px){.bstats,.bstats.five{grid-template-columns:1fr 1fr}}
   .bstat .k{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:650}
   .bstat .v{font-size:19px;font-weight:650;margin-top:4px;font-variant-numeric:tabular-nums;letter-spacing:-.015em}
   .bstat .s{font-size:11px;color:var(--muted);margin-top:3px}
@@ -239,8 +241,9 @@
   .stage .qty{font-size:19px;font-weight:650;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
   .bar{height:9px;border-radius:5px;background:var(--line-2);overflow:hidden}
   .bar i{display:block;height:100%;border-radius:5px;background:var(--accent);transition:width .28s cubic-bezier(.4,0,.2,1)}
-  .stage.s2 .bar i{background:#5a83e4}
-  .stage.s3 .bar i{background:#8aa8ee}
+  .stage.s2 .bar i{background:#4a76e0}
+  .stage.s3 .bar i{background:#7a9dea}
+  .stage.s4 .bar i{background:#a6bef2}
   .stage .meta{display:flex;gap:14px;margin-top:7px;font-size:11.5px;color:var(--muted);flex-wrap:wrap}
   .stage .meta b{color:var(--ink-2);font-weight:600}
 
@@ -281,7 +284,7 @@
   <header class="top">
     <div class="eyebrow">Marketing &middot; Planificaci&oacute;n anual</div>
     <h1>Planificador de funnel</h1>
-    <p class="sub">Pon&eacute; el <b>objetivo de facturaci&oacute;n</b> y el <b>presupuesto</b>, y la herramienta te devuelve el mix de servicios recomendado y los <b>MQLs</b>, <b>oportunidades</b> y <b>clientes</b> que hacen falta. Todo arranca de la base real de <b>2025</b>: 182 MQLs &rarr; 13 oportunidades &rarr; 2 clientes &rarr; 28.200 &euro;.</p>
+    <p class="sub">Pon&eacute; el <b>objetivo de facturaci&oacute;n</b> y el <b>presupuesto</b>, y la herramienta te devuelve el mix de servicios recomendado y los <b>MQLs</b>, <b>SQLs</b>, <b>oportunidades</b> y <b>clientes</b> que hacen falta. Todo arranca de la base real de <b>2025</b>: 182 MQLs &rarr; 13 oportunidades &rarr; 2 clientes &rarr; 28.200 &euro;. El paso de <b>SQL</b> no se midi&oacute; ese a&ntilde;o, as&iacute; que se reparte con dos tasas editables cuyo producto es la conversi&oacute;n real.</p>
     <nav class="tabs" id="tabs">
       <button class="tab on" data-tab="plan">Planificador</button>
       <button class="tab" data-tab="roas">Calculadora de ROAS</button>
@@ -359,9 +362,15 @@
         <h2>Tasas y costes</h2>
         <div class="body">
           <div class="field">
-            <div class="head"><label for="r1">Conversi&oacute;n MQL &rarr; Oportunidad</label><span class="val" id="r1v"></span></div>
-            <input type="range" id="r1" min="3" max="30" step="0.5">
-            <div class="base">2025: <b>7,1 %</b></div>
+            <div class="head"><label for="rA">Conversi&oacute;n MQL &rarr; SQL</label><span class="val" id="rAv"></span></div>
+            <input type="range" id="rA" min="5" max="80" step="0.5">
+            <div class="base">Qu&eacute; parte de los MQLs acepta ventas como cualificados. <b>En 2025 no se midi&oacute;</b>: es un supuesto.</div>
+          </div>
+
+          <div class="field">
+            <div class="head"><label for="rB">Conversi&oacute;n SQL &rarr; Oportunidad</label><span class="val" id="rBv"></span></div>
+            <input type="range" id="rB" min="5" max="80" step="0.5">
+            <div class="base">De los SQL, cu&aacute;ntos llegan a propuesta abierta. MQL&rarr;Opp efectivo: <b id="r1eff"></b> &mdash; 2025: <b>7,1 %</b></div>
           </div>
 
           <div class="field">
@@ -395,8 +404,10 @@
               <p><b>Coste por MQL</b> &mdash; lo que te cuesta traer un lead calificado. Sale de la inversi&oacute;n variable de 2025 dividida por los MQLs de 2025:</p>
               <span class="f">13.127 &euro; &divide; 182 MQLs = 72 &euro; <em>por MQL</em></span>
               <p><b>Estructura anual</b> &mdash; los 13.873 &euro; de salario y estructura del a&ntilde;o pasado (27.000 &euro; totales &minus; 13.127 &euro; variables). Es un coste fijo: no crece si generás más MQLs. Queda <b>fuera del presupuesto a gastar</b>, pero s&iacute; entra en el c&aacute;lculo de ROI y CAC, porque es plata real que cuesta el funnel.</p>
-              <p><b>Las dos tasas</b> son los saltos del funnel. Multiplicadas dan la conversi&oacute;n de punta a punta:</p>
-              <span class="f">MQL&rarr;Cliente = MQL&rarr;Opp &times; Opp&rarr;Won<br><em>2025: 7,1 % &times; 15,4 % = 1,10 %</em></span>
+              <p><b>Las tres tasas</b> son los saltos del funnel. Multiplicadas dan la conversi&oacute;n de punta a punta:</p>
+              <span class="f">MQL&rarr;Cliente = MQL&rarr;SQL &times; SQL&rarr;Opp &times; Opp&rarr;Won<br><em>2025: 7,1 % &times; 15,4 % = 1,10 %</em></span>
+              <p><b>El paso de SQL</b> &mdash; el filtro entre lo que marketing entrega y lo que ventas acepta trabajar &mdash; <b>no se midi&oacute; en 2025</b>. De ese a&ntilde;o sabemos que de 182 MQLs salieron 13 oportunidades, o sea un <b>7,1 % de punta a punta</b>, pero no en qu&eacute; salto se perdi&oacute; el resto. Por eso las dos tasas vienen precargadas de modo que <b>su producto d&eacute; exactamente esa cifra</b>: el modelo no cambia de resultado, s&oacute;lo muestra el paso intermedio. En cuanto tengas el dato real de SQLs, mové los dos sliders y todo se recalcula.</p>
+              <p>Por qué conviene separarlo: un 7,1 % puede ser <b>mucho volumen mal cualificado</b> (MQL&rarr;SQL bajo) o <b>buena cualificaci&oacute;n que ventas no trabaja</b> (SQL&rarr;Opp bajo). Son dos problemas distintos, con dueños distintos y arreglos distintos, y hasta que no los separás no sabés cuál tenés.</p>
               <p><b>Ciclo de venta</b> &mdash; no cambia cu&aacute;ntos MQLs necesit&aacute;s, cambia <b>cu&aacute;ndo</b>. Un MQL que entra en noviembre con ciclo de 3 meses cierra el a&ntilde;o que viene, no este. Por eso los meses útiles de generaci&oacute;n son <code>12 &minus; ciclo</code>, y el ritmo mensual real es m&aacute;s alto que el promedio plano.</p>
             </div>
           </details>
@@ -448,7 +459,7 @@
               <p>Y dando la vuelta al c&aacute;lculo sale el dato m&aacute;s &uacute;til de todos, la <b>conversi&oacute;n m&iacute;nima</b>: qué tasa de punta a punta ten&eacute;s que lograr para que el presupuesto alcance.</p>
               <span class="f">conversi&oacute;n m&iacute;nima = clientes &divide; MQLs que compra</span>
               <p>Si ese n&uacute;mero est&aacute; por encima de lo que puedas conseguir en la realidad, el plan no cierra: hay que subir presupuesto, bajar el objetivo, o mover el mix a servicios de ticket m&aacute;s alto.</p>
-              <p>La <b>reserva de conversi&oacute;n</b> juega en contra del volumen y a favor de la tasa: cada euro que reserv&aacute;s compra menos MQLs pero deber&iacute;a hacer que los que entran conviertan mejor. Es el trade-off central del plan.</p>
+              <p>La <b>reserva de conversi&oacute;n</b> juega en contra del volumen y a favor de la tasa: cada euro que reserv&aacute;s compra menos MQLs pero deber&iacute;a hacer que los que entran conviertan mejor. Es el trade-off central del plan, y con el paso de SQL separado se ve mejor d&oacute;nde deber&iacute;a pegar esa reserva: el nurturing y la cualificaci&oacute;n mueven <b>MQL&rarr;SQL</b>, el sales enablement mueve <b>SQL&rarr;Opp</b>.</p>
             </div>
           </details>
         </div>
@@ -463,8 +474,9 @@
             <summary>C&oacute;mo se calcula el funnel</summary>
             <div class="inner">
               <p>Se calcula <b>hacia atr&aacute;s</b>: arranca de los clientes que pide el mix y sube por el funnel dividiendo por cada tasa de conversi&oacute;n.</p>
-              <span class="f">clientes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= del mix de servicios<br>oportunidades = clientes &divide; (Opp&rarr;Won)<br>MQLs &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= oportunidades &divide; (MQL&rarr;Opp)</span>
-              <p>Las barras est&aacute;n a escala de los MQLs, para que se vea de un golpe cu&aacute;nto se pierde en cada salto. El <b>vs 2025</b> de la derecha compara cada etapa con la del a&ntilde;o pasado (182 / 13 / 2).</p>
+              <span class="f">clientes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= del mix de servicios<br>oportunidades = clientes &divide; (Opp&rarr;Won)<br>SQLs &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= oportunidades &divide; (SQL&rarr;Opp)<br>MQLs &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= SQLs &divide; (MQL&rarr;SQL)</span>
+              <p>Las barras est&aacute;n a escala de los MQLs, para que se vea de un golpe cu&aacute;nto se pierde en cada salto. El <b>vs 2025</b> de la derecha compara cada etapa con la del a&ntilde;o pasado (182 / 13 / 2). La etapa de <b>SQL</b> dice <em>sin dato 2025</em> porque ese paso no se midi&oacute;: no hay contra qu&eacute; compararla todav&iacute;a.</p>
+              <p>El <b>coste por SQL</b> es la m&eacute;trica que le importa a ventas: lo que cuesta poner un lead aceptado sobre la mesa. Y los <b>MQLs descartados</b> son el desperdicio del embudo &mdash; leads que ya pagaste y que ventas no toma. Si ese n&uacute;mero es grande, el problema est&aacute; en la segmentaci&oacute;n de la captaci&oacute;n, no en el presupuesto.</p>
               <p>Los dos ritmos mensuales son distintos a prop&oacute;sito:</p>
               <ul>
                 <li><b>A ritmo plano</b> &mdash; <code>MQLs &divide; 12</code>. Es el promedio, sirve poco para planificar.</li>
@@ -490,7 +502,7 @@
             <div class="inner">
               <p>La pregunta es: <b>¿cu&aacute;nto cuesta conseguir un cliente por marketing, y vale la pena para este servicio?</b></p>
               <p>Primero, el CAC variable &mdash; lo que cuesta un cliente en pura inversi&oacute;n de medios, sin estructura:</p>
-              <span class="f">CAC variable = coste por MQL &divide; (MQL&rarr;Opp &times; Opp&rarr;Won)</span>
+              <span class="f">CAC variable = coste por MQL &divide; (MQL&rarr;SQL &times; SQL&rarr;Opp &times; Opp&rarr;Won)</span>
               <p>Es lo mismo que decir "cu&aacute;ntos MQLs necesito por cliente, por lo que cuesta cada MQL". Despu&eacute;s, para cada servicio:</p>
               <span class="f">retorno / CAC = precio del servicio &divide; CAC variable</span>
               <p>Los colores marcan el umbral:</p>
@@ -520,8 +532,8 @@
             <summary>C&oacute;mo leer esta tabla</summary>
             <div class="inner">
               <p>Es la misma cuenta del funnel, repetida para cada combinaci&oacute;n posible de las dos tasas. Cada celda responde: <b>si mis tasas terminan siendo estas, ¿cu&aacute;ntos MQLs necesito?</b></p>
-              <span class="f">MQLs = clientes del mix &divide; ( MQL&rarr;Opp &times; Opp&rarr;Won )</span>
-              <p>Las <b>filas</b> son MQL&rarr;Oportunidad (de tu 7,1 % actual hasta 20 %). Las <b>columnas</b> son Oportunidad&rarr;Cliente (15 % a 30 %). La fila con borde negro es donde est&aacute; tu slider ahora, y la celda con borde es tu combinaci&oacute;n exacta.</p>
+              <span class="f">MQLs = clientes del mix &divide; ( MQL&rarr;Opp efectivo &times; Opp&rarr;Won )</span>
+              <p>Las <b>filas</b> son MQL&rarr;Oportunidad <b>efectivo</b> &mdash; el producto de MQL&rarr;SQL por SQL&rarr;Opp, los dos saltos de arriba juntos &mdash; de tu 7,1 % actual hasta 20 %. Las <b>columnas</b> son Oportunidad&rarr;Cliente (15 % a 30 %). La fila con borde negro es donde est&aacute; tu slider ahora, y la celda con borde es tu combinaci&oacute;n exacta.</p>
               <p>Los colores comparan contra los <b>182 MQLs</b> que generaste en 2025, porque eso es lo que sabés que pod&eacute;s hacer:</p>
               <ul>
                 <li><span class="pill g">verde</span> &nbsp;hasta 2,2x tu volumen 2025 &mdash; alcanzable.</li>
@@ -620,7 +632,7 @@
               <summary>C&oacute;mo se comprueba</summary>
               <div class="inner">
                 <p>La facturaci&oacute;n que sale del ROAS es s&oacute;lo una cifra: hay que ver si el funnel la puede producir. Se baja de euros a clientes y de clientes a MQLs, con el ticket medio y las tasas del planificador.</p>
-                <span class="f">clientes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= facturaci&oacute;n &divide; ticket medio<br>oportunidades = clientes &divide; (Opp&rarr;Won)<br>MQLs &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= oportunidades &divide; (MQL&rarr;Opp)</span>
+                <span class="f">clientes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= facturaci&oacute;n &divide; ticket medio<br>oportunidades = clientes &divide; (Opp&rarr;Won)<br>SQLs &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= oportunidades &divide; (SQL&rarr;Opp)<br>MQLs &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= SQLs &divide; (MQL&rarr;SQL)</span>
                 <p>Y ese n&uacute;mero de MQLs se compara contra los que el presupuesto puede pagar:</p>
                 <span class="f">MQLs que compra = ( presupuesto &minus; reserva ) &divide; coste por MQL</span>
                 <p>Si los MQLs que hacen falta entran en los que compr&aacute;s, el ROAS es alcanzable con lo que ya asumiste. Si no, hay que mover una de las tres palancas de abajo.</p>
@@ -660,7 +672,7 @@
               <summary>C&oacute;mo leer la tabla</summary>
               <div class="inner">
                 <p>Es la misma cuenta repetida para varios niveles de ROAS, con tu inversi&oacute;n, tu ticket y tus tasas fijos. La fila resaltada es el ROAS que ten&eacute;s puesto arriba.</p>
-                <p><b>Clientes</b> y <b>MQLs</b> se redondean para arriba: medio cliente no existe. La &uacute;ltima columna compara los MQLs de la fila contra los que compra el presupuesto.</p>
+                <p><b>Clientes</b> y <b>MQLs</b> se redondean para arriba: medio cliente no existe. Los MQLs de la tabla usan el <b>MQL&rarr;Opp efectivo</b>, o sea las dos tasas de arriba multiplicadas. La &uacute;ltima columna compara los MQLs de la fila contra los que compra el presupuesto.</p>
                 <ul>
                   <li><span class="pill g">entra</span> &nbsp;el presupuesto paga esos MQLs.</li>
                   <li><span class="pill w">justo</span> &nbsp;se pasa hasta un 15 %: se resuelve con eficiencia, no con m&aacute;s plata.</li>
@@ -676,7 +688,7 @@
   </div><!-- /panel roas -->
 
   <footer>
-    <span>Base 2025 &middot; 182 MQLs &rarr; 13 oportunidades &rarr; 2 clientes &middot; 27.000 &euro; invertidos (13.127 &euro; variable + 13.873 &euro; estructura) &middot; 28.200 &euro; facturados &middot; ROI 1,04x</span>
+    <span>Base 2025 &middot; 182 MQLs &rarr; 13 oportunidades &rarr; 2 clientes (SQL no medido) &middot; 27.000 &euro; invertidos (13.127 &euro; variable + 13.873 &euro; estructura) &middot; 28.200 &euro; facturados &middot; ROI 1,04x</span>
     <button class="reset" id="reset">Volver a los valores por defecto</button>
   </footer>
 </div>
@@ -688,7 +700,8 @@
 var B = { mqls:182, opps:13, clients:2, revenue:28200, investTotal:27000, investVar:13127 };
 B.fixed  = B.investTotal - B.investVar;   // 13.873
 B.cpm    = B.investVar / B.mqls;          // 72,13
-B.r1     = B.opps / B.mqls;               // 7,14 %
+B.sqls   = null;                          // el paso de SQL no se midio en 2025
+B.r1     = B.opps / B.mqls;               // 7,14 % — MQL→Opp efectivo, ya con el SQL adentro
 B.r2     = B.clients / B.opps;            // 15,38 %
 B.ticket = B.revenue / B.clients;         // 14.100
 B.roi    = B.revenue / B.investTotal;     // 1,04x
@@ -709,31 +722,31 @@ var IDS = SERVICES.map(function(s){ return s.id; });
 var PRESETS = [
   { id:"rec",   label:"Recomendado",
     spec:{dw:{share:.45}, ag:{share:.28}, gd:{share:.24}, ad:{share:.03}},
-    r1:15, r2:25,
+    rA:40, rB:37.5, r2:25,
     why:"Tope del 45 % en Digital Workplace: el servicio más rentable, pero no conviene que más de la mitad del año dependa de él." },
   { id:"onedw", label:"Un solo DW",
     spec:{dw:{fixed:1}, ag:{share:.45}, gd:{share:.37}, ad:{share:.03}},
-    r1:15, r2:25,
+    rA:40, rB:37.5, r2:25,
     why:"Un único proyecto flagship y el resto en el tramo de 15.000 €, que es el que ya demostraste que sabés cerrar." },
   { id:"nodw",  label:"Sin DW",
     spec:{dw:{fixed:0}, ag:{share:.50}, gd:{share:.47}, ad:{share:.03}},
-    r1:15, r2:25,
+    rA:40, rB:37.5, r2:25,
     why:"Cero dependencia del flagship. Más clientes, más MQLs y más carga de entrega, pero ningún punto único de fallo." },
   { id:"conc",  label:"Concentrado",
     spec:{dw:{share:.75}, ag:{share:.15}, gd:{share:.07}, ad:{share:.03}},
-    r1:15, r2:25,
+    rA:40, rB:37.5, r2:25,
     why:"Máxima eficiencia de marketing: el mínimo de clientes posible. Todo el riesgo está en cerrar los proyectos grandes." },
   { id:"equi",  label:"Equilibrado",
     spec:{dw:{share:.30}, ag:{share:.30}, gd:{share:.22}, ad:{share:.08}, ic:{share:.10}},
-    r1:15, r2:25,
+    rA:40, rB:37.5, r2:25,
     why:"Cartera repartida entre los cinco servicios. Cuesta bastante más en marketing porque los tickets bajos arrastran el promedio." },
   { id:"vol",   label:"Volumen",
     spec:{dw:{fixed:0}, ag:{share:.30}, gd:{share:.30}, ad:{share:.20}, ic:{share:.20}},
-    r1:15, r2:25,
+    rA:40, rB:37.5, r2:25,
     why:"Muchos clientes de ticket bajo. Sirve para ganar logos y base instalada, pero como plan de facturación es el más caro de todos." },
   { id:"lin",   label:"Tasas 2025",
     spec:{dw:{share:.45}, ag:{share:.28}, gd:{share:.24}, ad:{share:.03}},
-    r1:7.1, r2:15,
+    rA:25.5, rB:28, r2:15,
     why:"El mix recomendado pero sin mejorar nada de la conversión. Sirve para ver por qué el objetivo no sale solo con más presupuesto." }
 ];
 
@@ -741,13 +754,14 @@ var DEFAULTS = {
   qty:{dw:3,ag:4,gd:3,ad:2,ic:0},
   price:{dw:30000,ag:15000,gd:15000,ad:2500,ic:2000},
   target:200000, budget:51400, reserve:8000,
-  r1:15, r2:25,
+  rA:40, rB:37.5, r2:25,
   cpm:Math.round(B.cpm), fixed:B.fixed, cycle:3,
   preset:"rec",
   roas:3, roasBase:"media", tab:"plan"
 };
 
-var KEY = "funnel-planner-v2";
+/* v3: el funnel gano el paso de SQL, asi que la tasa MQL→Opp se parte en dos */
+var KEY = "funnel-planner-v3", KEY_OLD = "funnel-planner-v2";
 var S = load();
 
 function clone(o){ return JSON.parse(JSON.stringify(o)); }
@@ -755,7 +769,9 @@ function clone(o){ return JSON.parse(JSON.stringify(o)); }
 function load(){
   var d = clone(DEFAULTS);
   try{
-    var raw = localStorage.getItem(KEY);
+    /* si no hay v3 se recupera el v2: se conserva todo menos la tasa vieja,
+       que ya no existe como campo unico */
+    var raw = localStorage.getItem(KEY) || localStorage.getItem(KEY_OLD);
     if(!raw) return d;
     var p = JSON.parse(raw), k;
     for(k in d){
@@ -850,7 +866,7 @@ function applyPreset(id){
   for(i = 0; i < PRESETS.length; i++) if(PRESETS[i].id === id) p = PRESETS[i];
   if(!p) return;
   S.qty = buildMix(S.target, p.spec);
-  S.r1 = p.r1; S.r2 = p.r2; S.preset = p.id;
+  S.rA = p.rA; S.rB = p.rB; S.r2 = p.r2; S.preset = p.id;
   save(); syncInputs(); render();
 }
 
@@ -862,9 +878,11 @@ function calc(){
     revenue += S.qty[id] * S.price[id];
     clients += S.qty[id];
   }
-  var r1 = S.r1/100, r2 = S.r2/100;
+  var rA = S.rA/100, rB = S.rB/100, r2 = S.r2/100;
+  var r1 = rA*rB;                              /* MQL→Opp efectivo, los dos saltos juntos */
   var opps = clients ? clients/r2 : 0;
-  var mqls = clients ? opps/r1 : 0;
+  var sqls = clients ? opps/rB : 0;
+  var mqls = clients ? sqls/rA : 0;
   var cpm  = S.cpm > 0 ? S.cpm : 1;
 
   var mediaSpend = mqls * cpm;                 /* lo que hay que gastar en medios */
@@ -874,8 +892,8 @@ function calc(){
   var sellingMonths = Math.max(1, 12 - S.cycle);
 
   return {
-    revenue:revenue, clients:clients, r1:r1, r2:r2,
-    opps:Math.ceil(opps), mqls:Math.ceil(mqls),
+    revenue:revenue, clients:clients, rA:rA, rB:rB, r1:r1, r2:r2,
+    opps:Math.ceil(opps), sqls:Math.ceil(sqls), mqls:Math.ceil(mqls),
     mediaSpend:mediaSpend,
     invest: mediaSpend + S.fixed,
     media:media, affordable:Math.floor(affordable),
@@ -891,6 +909,7 @@ function calc(){
     perMonth: mqls/12,
     perMonthFront: mqls/sellingMonths,
     sellingMonths: sellingMonths,
+    sqlsPerMonth: sqls/sellingMonths,
     oppsPerMonth: opps/sellingMonths
   };
 }
@@ -1021,7 +1040,7 @@ function renderBudget(c){
     {k:"MQLs que compra",  v:group(c.affordable),
      s:eur(c.media) + " ÷ " + eur(S.cpm) + " por MQL"},
     {k:"MQLs que necesita", v:group(c.mqls),
-     s:"con tasas de " + pct(c.r1) + " y " + pct(c.r2)},
+     s:"con " + pct(c.rA) + " · " + pct(c.rB) + " · " + pct(c.r2)},
     {k:"Holgura", v:(c.slack >= 0 ? "+" : "−") + group(c.slack),
      s:c.slack >= 0 ? Math.round(slackPct*100) + " % de margen" : "faltan MQLs",
      cls:c.slack < 0 ? "bad" : slackPct < 0.1 ? "warn" : "good"},
@@ -1049,28 +1068,36 @@ function renderFunnel(c){
   var host = document.getElementById("funnel");
   var max = Math.max(c.mqls, 1);
   var stages = [
-    { cls:"s1", nm:"MQLs", sub:"leads calificados", q:c.mqls, base:B.mqls, meta:[
+    { cls:"s1", nm:"MQLs", sub:"leads calificados por marketing", q:c.mqls, base:B.mqls, meta:[
       "<b>" + group(c.perMonth) + "</b>/mes a ritmo plano",
       "<b>" + group(Math.ceil(c.perMonthFront)) + "</b>/mes concentrados en " + c.sellingMonths + " meses",
       "medios <b>" + eur(c.mediaSpend) + "</b>"
     ]},
-    { cls:"s2", nm:"Oportunidades", sub:pct(c.r1) + " de los MQLs", q:c.opps, base:B.opps, meta:[
+    { cls:"s2", nm:"SQLs", sub:pct(c.rA) + " de los MQLs", q:c.sqls, base:B.sqls, meta:[
+      "<b>" + group(Math.ceil(c.sqlsPerMonth)) + "</b>/mes en " + c.sellingMonths + " meses",
+      "coste por SQL <b>" + eur(c.sqls ? c.mediaSpend/c.sqls : 0) + "</b>",
+      "se descartan <b>" + group(c.mqls - c.sqls) + "</b> MQLs"
+    ]},
+    { cls:"s3", nm:"Oportunidades", sub:pct(c.rB) + " de los SQL", q:c.opps, base:B.opps, meta:[
       "<b>" + (Math.round(c.oppsPerMonth*10)/10).toFixed(1).replace(".", ",") + "</b>/mes",
       "coste por oportunidad <b>" + eur(c.opps ? c.mediaSpend/c.opps : 0) + "</b>"
     ]},
-    { cls:"s3", nm:"Clientes", sub:pct(c.r2) + " de las oportunidades", q:c.clients, base:B.clients, meta:[
+    { cls:"s4", nm:"Clientes", sub:pct(c.r2) + " de las oportunidades", q:c.clients, base:B.clients, meta:[
       "ticket medio <b>" + eur(c.ticket) + "</b>",
       "MQL→Cliente <b>" + pct(c.r1*c.r2) + "</b>"
     ]}
   ];
   host.innerHTML = stages.map(function(s){
-    var x = s.base ? s.q/s.base : 0;
+    /* el SQL no tiene base 2025: nunca se midio, asi que no se compara */
+    var vs = s.base
+      ? 'vs 2025 · <b>' + mult(s.q/s.base) + '</b>'
+      : 'sin dato 2025';
     return '<div class="stage ' + s.cls + '">' +
       '<div class="row1"><div class="nm">' + s.nm + ' <span>' + s.sub + '</span></div>' +
       '<div class="qty">' + group(s.q) + '</div></div>' +
       '<div class="bar"><i style="width:' + Math.max(1.2, (s.q/max)*100) + '%"></i></div>' +
       '<div class="meta">' + s.meta.map(function(m){ return "<span>" + m + "</span>"; }).join("") +
-      '<span style="margin-left:auto">vs 2025 · <b>' + mult(x) + '</b></span></div></div>';
+      '<span style="margin-left:auto">' + vs + '</span></div></div>';
   }).join("");
 }
 
@@ -1100,7 +1127,7 @@ function renderUnit(c){
 function renderSens(c){
   var rows = [7.1, 10, 12, 15, 20], cols = [15, 20, 25, 30];
   document.getElementById("sens").innerHTML = rows.map(function(r){
-    var isCurRow = Math.abs(r - S.r1) < 1.3;
+    var isCurRow = Math.abs(r - c.r1*100) < 1.3;
     var tds = cols.map(function(k){
       var n = c.clients ? Math.ceil(c.clients / ((r/100)*(k/100))) : 0;
       var x = B.mqls ? n/B.mqls : 0;
@@ -1135,13 +1162,15 @@ function roasCalc(c){
      medio proyecto no existe, y asi coincide con la tabla de escenarios */
   var clientsNeed = ticket ? Math.ceil(goal/ticket) : 0;
   var oppsNeed    = c.r2 ? clientsNeed/c.r2 : 0;
-  var mqlsNeed    = c.r1 ? oppsNeed/c.r1 : 0;
+  var sqlsNeed    = c.rB ? oppsNeed/c.rB : 0;
+  var mqlsNeed    = c.rA ? sqlsNeed/c.rA : 0;
 
   var maxRevenue = c.maxClients * ticket;
 
   return {
     media:media, base:base, goal:goal, ticket:ticket,
-    clientsNeed:clientsNeed, oppsNeed:Math.ceil(oppsNeed), mqlsNeed:Math.ceil(mqlsNeed),
+    clientsNeed:clientsNeed, oppsNeed:Math.ceil(oppsNeed),
+    sqlsNeed:Math.ceil(sqlsNeed), mqlsNeed:Math.ceil(mqlsNeed),
     affordable:c.affordable, maxClients:c.maxClients,
     maxRevenue:maxRevenue,
     maxRoas: base ? maxRevenue/base : 0,
@@ -1195,13 +1224,16 @@ function renderRoas(c){
      s:eur(r.goal) + " ÷ " + eur(r.ticket) + " de ticket"},
     {k:"Oportunidades", v:group(r.oppsNeed),
      s:"a " + pct(c.r2) + " de cierre"},
+    {k:"SQLs necesarios", v:group(r.sqlsNeed),
+     s:"a " + pct(c.rB) + " de SQL a propuesta"},
     {k:"MQLs necesarios", v:group(r.mqlsNeed),
-     s:"a " + pct(c.r1) + " de cualificación",
+     s:"a " + pct(c.rA) + " de MQL a SQL",
      cls:r.fits ? "good" : "bad"},
     {k:"ROAS m&aacute;ximo hoy", v:roasFmt(r.maxRoas),
      s:group(r.maxClients) + " clientes × " + eur(r.ticket) + " ÷ " + eur(r.base),
      cls:r.maxRoas >= S.roas ? "good" : "warn"}
   ];
+  document.getElementById("roasStats").className = "bstats five";
   document.getElementById("roasStats").innerHTML = stats.map(function(x){
     return '<div class="bstat"><div class="k">' + x.k + '</div>' +
       '<div class="v' + (x.cls ? " " + x.cls : "") + '">' + x.v + '</div>' +
@@ -1304,20 +1336,22 @@ function paintRange(el){
 }
 
 function syncInputs(){
-  ["target","budget","r1","r2","cpm","fixed","cycle","reserve"].forEach(function(k){
+  ["target","budget","rA","rB","r2","cpm","fixed","cycle","reserve"].forEach(function(k){
     var el = document.getElementById(k);
     if(el) el.value = S[k];
   });
   document.getElementById("targetR").value = Math.min(500000, Math.max(50000, S.target));
   document.getElementById("budgetR").value = Math.min(150000, S.budget);
-  ["r1","r2","cycle","reserve","targetR","budgetR"].forEach(function(id){
+  ["rA","rB","r2","cycle","reserve","targetR","budgetR"].forEach(function(id){
     paintRange(document.getElementById(id));
   });
   document.getElementById("targetv").textContent  = eurK(S.target);
   document.getElementById("budgetv").textContent  = eurK(S.budget);
   document.getElementById("reservev").textContent = eur(S.reserve);
-  document.getElementById("r1v").textContent = nf.format(S.r1) + " %";
+  document.getElementById("rAv").textContent = nf.format(S.rA) + " %";
+  document.getElementById("rBv").textContent = nf.format(S.rB) + " %";
   document.getElementById("r2v").textContent = nf.format(S.r2) + " %";
+  document.getElementById("r1eff").textContent = pct((S.rA/100)*(S.rB/100));
   document.getElementById("cyclev").textContent =
     S.cycle === 0 ? "inmediato" : S.cycle + " mes" + (S.cycle > 1 ? "es" : "");
 
@@ -1368,11 +1402,11 @@ function setBudget(v){
 document.getElementById("budget").oninput  = function(){ setBudget(+this.value); };
 document.getElementById("budgetR").oninput = function(){ setBudget(+this.value); };
 
-["r1","r2","cycle","reserve"].forEach(function(id){
+["rA","rB","r2","cycle","reserve"].forEach(function(id){
   var el = document.getElementById(id);
   el.oninput = function(){
     S[id] = +el.value;
-    if(id === "r1" || id === "r2") S.preset = null;
+    if(id === "rA" || id === "rB" || id === "r2") S.preset = null;
     if(id === "reserve" && S.reserve > S.budget) S.reserve = S.budget;
     save(); syncInputs(); render({keepMix:true});
   };

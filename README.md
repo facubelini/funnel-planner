@@ -2,7 +2,7 @@
 
 Herramienta interactiva para dimensionar el funnel de marketing necesario para un objetivo de
 facturación anual. Ponés el objetivo y el presupuesto, y te devuelve el mix de servicios
-recomendado más los MQLs, oportunidades y clientes que hacen falta, con inversión, ROI y CAC.
+recomendado más los MQLs, SQLs, oportunidades y clientes que hacen falta, con inversión, ROI y CAC.
 La segunda pestaña hace la cuenta inversa: partís de un ROAS y te dice cuánto habría que
 facturar y si el funnel da para tanto.
 
@@ -16,22 +16,52 @@ Todo el modelo parte de la base real del año anterior:
 | --- | --- |
 | MQLs | 182 |
 | Oportunidades | 13 (7,1 % de los MQLs) |
+| SQLs | sin medir |
 | Clientes | 2 (15,4 % de las oportunidades) |
 | Facturación | 28.200 € |
 | Inversión | 27.000 € (13.127 € variable + 13.873 € estructura) |
 | ROI | 1,04x |
 
 De ahí salen los dos parámetros que mueven todo: **coste por MQL** (72 € = 13.127 € / 182) y las
-dos **tasas de conversión**. El cálculo va hacia atrás desde el mix:
+**tasas de conversión**. El cálculo va hacia atrás desde el mix:
 
 ```
 clientes       = suma de las cantidades del mix
 oportunidades  = clientes / (Opp→Won)
-MQLs           = oportunidades / (MQL→Opp)
+SQLs           = oportunidades / (SQL→Opp)
+MQLs           = SQLs / (MQL→SQL)
 medios         = MQLs × coste por MQL
 inversión      = medios + estructura
-CAC variable   = coste por MQL / (MQL→Opp × Opp→Won)
+CAC variable   = coste por MQL / (MQL→SQL × SQL→Opp × Opp→Won)
 ```
+
+## El paso de SQL
+
+El funnel tiene cuatro etapas: **MQL → SQL → Oportunidad → Cliente**. El SQL es el filtro entre lo
+que marketing entrega y lo que ventas acepta trabajar.
+
+De 2025 sabemos que de 182 MQLs salieron 13 oportunidades — un **7,1 % de punta a punta** — pero
+**no en qué salto se perdió el resto**, porque ese año el paso de SQL no se midió. Por eso las dos
+tasas vienen precargadas de modo que su producto dé exactamente esa cifra:
+
+| | MQL→SQL | SQL→Opp | MQL→Opp efectivo |
+| --- | --- | --- | --- |
+| Tasas objetivo | 40 % | 37,5 % | 15 % |
+| Tasas 2025 | 25,5 % | 28 % | 7,14 % |
+
+El reparto entre las dos es un **supuesto editable**, no un dato: el modelo devuelve exactamente los
+mismos MQLs, ROI y CAC que antes de separar el paso, sólo que ahora muestra la etapa intermedia. En
+cuanto haya dato real de SQLs, se mueven los dos sliders y todo se recalcula.
+
+Por qué conviene separarlo: un 7,1 % puede ser **mucho volumen mal cualificado** (MQL→SQL bajo) o
+**buena cualificación que ventas no trabaja** (SQL→Opp bajo). Son dos problemas distintos, con
+dueños distintos y arreglos distintos, y hasta separarlos no se sabe cuál es. También separa dónde
+debería pegar la reserva de conversión: nurturing y cualificación mueven MQL→SQL, sales enablement
+mueve SQL→Opp.
+
+La etapa de SQL en el funnel muestra el **coste por SQL** (lo que cuesta poner un lead aceptado
+sobre la mesa) y los **MQLs descartados**, que son el desperdicio del embudo: leads ya pagados que
+ventas no toma. En el bloque *vs 2025* dice `sin dato 2025`, porque no hay contra qué compararla.
 
 El **CAC variable** es la métrica clave de la tabla de rentabilidad: si un servicio cuesta menos
 que el CAC, adquirir ese cliente por marketing pago pierde dinero.
@@ -69,7 +99,7 @@ medios disponibles = presupuesto − reserva de conversión
 MQLs que compra    = medios disponibles / coste por MQL
 holgura            = MQLs que compra − MQLs que necesita el mix
 conversión mínima  = clientes del mix / MQLs que compra
-techo de clientes  = MQLs que compra × MQL→Opp × Opp→Won
+techo de clientes  = MQLs que compra × MQL→SQL × SQL→Opp × Opp→Won
 ```
 
 La reserva de conversión (nurturing, SDR, cualificación, sales enablement) es el trade-off central:
@@ -81,8 +111,8 @@ pone en rojo indicando por cuánto se pasan.
 
 ## Escenarios precargados
 
-Calculados para un objetivo de 200.000 € y tasas objetivo del 15 % / 25 %. Al cambiar el objetivo
-se rearman solos:
+Calculados para un objetivo de 200.000 € y tasas objetivo del 40 % / 37,5 % / 25 % (15 % de
+MQL→Opp efectivo). Al cambiar el objetivo se rearman solos:
 
 | Escenario | Mix | Clientes | MQLs | Conversión mínima* |
 | --- | --- | --- | --- | --- |
@@ -92,7 +122,7 @@ se rearman solos:
 | Concentrado | 5 DW, 2 Agentes, 1 Gestor, 2 Adopción | 10 | 267 | 1,7 % |
 | Equilibrado | 2 DW, 4 Agentes, 3 Gestor, 6 Adopción, 10 Infra | 25 | 667 | 4,1 % |
 | Volumen | 4 Agentes, 4 Gestor, 16 Adopción, 20 Infra | 44 | 1.174 | 7,3 % |
-| Tasas 2025 | mismo mix recomendado, sin mejorar conversión | 12 | 1.127 | 2,0 % |
+| Tasas 2025 | mismo mix recomendado, sin mejorar conversión | 12 | 1.121 | 2,0 % |
 
 \* con 51.400 € de presupuesto y 8.000 € de reserva. Los dos últimos escenarios se pasan de
 presupuesto: piden más MQLs de los que compran 43.400 €.
@@ -102,10 +132,11 @@ presupuesto: piden más MQLs de los que compran 43.400 €.
 La tabla del final repite la cuenta del funnel para cada combinación de las dos tasas:
 
 ```
-MQLs = clientes del mix / (MQL→Opp × Opp→Won)
+MQLs = clientes del mix / (MQL→Opp efectivo × Opp→Won)
 ```
 
-Los colores comparan contra los 182 MQLs de 2025, que es el volumen que ya está demostrado: verde
+Las filas son el **MQL→Opp efectivo** — las dos tasas de arriba multiplicadas — así que la tabla se
+mantiene en dos dimensiones. Los colores comparan contra los 182 MQLs de 2025, que es el volumen que ya está demostrado: verde
 hasta 2,2x, ámbar hasta 4x, rojo por encima. Sirve para ver que bajar una fila (mejor cualificación)
 ahorra muchos más MQLs que correrse una columna (mejor cierre) — y arreglar la cualificación es más
 barato y más rápido.
@@ -132,7 +163,7 @@ que el presupuesto puede pagar:
 
 ```
 clientes necesarios = techo( facturación / ticket medio del mix )
-MQLs necesarios     = clientes / (MQL→Opp × Opp→Won)
+MQLs necesarios     = clientes / (MQL→SQL × SQL→Opp × Opp→Won)
 MQLs que compra     = (presupuesto − reserva) / coste por MQL
 ```
 
@@ -163,14 +194,15 @@ y regenera el mix para ella.
 - Cantidad y **precio** de cada servicio
 - Objetivo de facturación (campo o slider) y presupuesto a gastar (campo o slider)
 - Reserva de conversión
-- Las dos tasas de conversión
+- Las tres tasas de conversión: MQL→SQL, SQL→Opp y Opp→Cliente
 - Coste por MQL y coste de estructura anual
 - Ciclo de venta — recalcula la cadencia mensual de MQLs sobre los meses que realmente cierran
   dentro del año (los MQLs de los últimos meses no llegan a convertir)
 - ROAS objetivo y base de cálculo, en la segunda pestaña
 
 Cada bloque tiene un desplegable *Cómo se calcula* con las fórmulas y el criterio detrás de cada
-número. Los cambios quedan guardados en `localStorage`, así que la pestaña recuerda el último mix.
+número. Los cambios quedan guardados en `localStorage` (`funnel-planner-v3`, que recupera lo guardado en
+`v2` menos la tasa vieja), así que la pestaña recuerda el último mix.
 
 ## Stack
 
