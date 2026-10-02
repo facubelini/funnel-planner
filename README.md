@@ -31,7 +31,7 @@ oportunidades  = clientes / (Opp→Won)
 SQLs           = oportunidades / (SQL→Opp)
 MQLs           = SQLs / (MQL→SQL)
 medios         = MQLs × coste por MQL
-inversión      = medios + reserva de conversión + estructura
+inversión      = presupuesto total (salarios incluidos)
 CAC variable   = coste por MQL / (MQL→SQL × SQL→Opp × Opp→Won)
 ```
 
@@ -90,15 +90,14 @@ Tocar los steppers a mano desactiva el escenario y el mix pasa a ser manual.
 
 ## La restricción de presupuesto
 
-El presupuesto (**80.000 €**) es el **total, con salarios adentro**. De ahí salen la estructura
-(13.873 €, editable) y la reserva de conversión; lo que queda compra MQLs. La tarjeta *Encaje en el
-presupuesto* invierte el cálculo: te dice qué conversión estás **obligado** a alcanzar para que el mix entre.
+El presupuesto (**80.000 €**) es el **total, con salarios incluidos**, y es la única inversión del
+modelo: ROAS, ROI y CAC se calculan sobre ese número. Los MQLs salen de ahí a su coste por MQL; lo que no
+se va en MQLs queda para salarios y el resto. No hay estructura ni reserva aparte.
 
 ```
-medios disponibles = presupuesto total − estructura − reserva de conversión
-MQLs que compra    = medios disponibles / coste por MQL
-holgura            = MQLs que compra − MQLs que necesita el mix
-conversión mínima  = clientes del mix / MQLs que compra
+coste en MQLs  = MQLs que necesita el mix × coste por MQL
+queda          = presupuesto total − coste en MQLs
+conversión mín = clientes del mix / (presupuesto total / coste por MQL)
 ```
 
 ## Escenarios precargados
@@ -135,35 +134,31 @@ barato y más rápido.
 
 ## Calculadora de ROAS (misma página, debajo del planificador)
 
-Las métricas siguen la definición del área: **ROAS** = facturación ÷ inversión, **ROI** = (facturación − inversión) ÷ inversión, **CAC** = inversión ÷ clientes, cada una sobre inversión total y sin salario.
-
-La inversión **no es un dato**: depende de cuántos clientes se cierran. Por eso se resuelve junto con la facturación:
+Las métricas siguen la definición del área: **ROAS** = facturación ÷ inversión, **ROI** = (facturación − inversión) ÷ inversión, **CAC** = inversión ÷ clientes, con la inversión igual al presupuesto total.
 
 ```
-inversión   = fijos + clientes × (coste por MQL / conversión de punta a punta)
-facturación = clientes × ticket
-clientes    = ROAS × fijos / (ticket − ROAS × CAC variable)
+facturación = ROAS × presupuesto total
+clientes    = techo( facturación / ticket medio )
+MQLs        = clientes / (MQL→SQL × SQL→Opp × Opp→Won)
+queda       = presupuesto total − MQLs × coste por MQL
 ```
 
-Los fijos son la reserva (y los salarios si se mide sobre el total). Hay un **techo** de ROAS = ticket ÷
-CAC variable que ningún presupuesto supera. El gasto total (salarios incluidos) se compara contra los
-80.000 €, que son el tope. Un bloque aparte muestra qué pasa gastando todo con la conversión de 2025, a
-mitad de camino o la del plan. Se muestran clientes, oportunidades, SQLs, MQLs, MQLs por mes, gasto real
-y CAC.
+Muestra clientes, oportunidades, SQLs, MQLs, MQLs por mes, cuánto del presupuesto se va en MQLs y cuánto
+queda para salarios. Hay un techo de ROAS = ticket ÷ coste en MQLs por cliente que ningún presupuesto
+supera. Un bloque aparte repite el cálculo con la conversión de 2025, a mitad de camino y la del plan.
 
 ## Qué se puede editar
 
 - Cantidad y **precio** de cada servicio
-- Objetivo de facturación (campo o slider) y presupuesto a gastar (campo o slider)
-- Reserva de conversión
+- Objetivo de facturación (campo o slider) y presupuesto total (campo o slider)
 - Las tres tasas de conversión: MQL→SQL, SQL→Opp y Opp→Cliente
-- Coste por MQL y coste de estructura anual
+- Coste por MQL
 - Ciclo de venta — recalcula la cadencia mensual de MQLs sobre los meses que realmente cierran
   dentro del año (los MQLs de los últimos meses no llegan a convertir)
 - ROAS objetivo y base de cálculo, en la segunda pestaña
 
 Cada bloque tiene un desplegable *Cómo se calcula* con las fórmulas y el criterio detrás de cada
-número. Los cambios quedan guardados en `localStorage` (`funnel-planner-v4`), así que la pestaña recuerda el último mix.
+número. Los cambios quedan guardados en `localStorage` (`funnel-planner-v5`), así que la pestaña recuerda el último mix.
 
 ## Stack
 
