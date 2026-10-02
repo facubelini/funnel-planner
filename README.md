@@ -31,7 +31,7 @@ oportunidades  = clientes / (Opp→Won)
 SQLs           = oportunidades / (SQL→Opp)
 MQLs           = SQLs / (MQL→SQL)
 medios         = MQLs × coste por MQL
-inversión      = medios + estructura
+inversión      = medios + reserva de conversión + estructura
 CAC variable   = coste por MQL / (MQL→SQL × SQL→Opp × Opp→Won)
 ```
 
@@ -155,7 +155,7 @@ La inversión se puede medir de dos formas, y el mismo año da números muy dist
 
 | Base | Denominador | Para qué sirve |
 | --- | --- | --- |
-| Sólo medios | presupuesto | medir la eficacia de la pauta |
+| Presupuesto variable | presupuesto (medios + reserva) | medir la eficacia de la pauta |
 | Medios + estructura | presupuesto + estructura anual | ver si el área se paga sola |
 
 Después baja de euros a MQLs con el ticket medio y las tasas del planificador, y compara contra lo
@@ -180,6 +180,12 @@ presupuesto necesario = MQLs necesarios × coste por MQL + reserva
 La más barata casi siempre es el **ticket**: mover el mix hacia servicios caros no cuesta un euro
 más de medios. El **ROAS máximo alcanzable** cierra el círculo — con el presupuesto, las tasas y el
 ticket actuales, es el techo real, y hay un botón que lo carga directamente.
+
+**Qué esperar con el ROAS que ponés.** El funnel no gasta todo el presupuesto: gasta lo que cuestan los
+MQLs que hacen falta. Por eso la calculadora separa el ROAS que pedís (sobre lo disponible) del **ROAS
+real** (sobre lo que se gasta), y muestra clientes, oportunidades, SQLs, MQLs, MQLs por mes, gasto real,
+presupuesto sin usar y CAC. Un bloque aparte responde qué pasa si se gasta todo y la conversión sale
+como la de 2025, a mitad de camino, o como la del plan.
 
 La tabla de escenarios repite la cuenta de 1x a 10x con la inversión fija. Como la inversión no se
 mueve, cada punto de ROAS suma siempre la misma facturación y pide MQLs en la misma proporción: en

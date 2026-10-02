@@ -403,7 +403,7 @@
             <div class="inner">
               <p><b>Coste por MQL</b> &mdash; lo que te cuesta traer un lead calificado. Sale de la inversi&oacute;n variable de 2025 dividida por los MQLs de 2025:</p>
               <span class="f">13.127 &euro; &divide; 182 MQLs = 72 &euro; <em>por MQL</em></span>
-              <p><b>Estructura anual</b> &mdash; los 13.873 &euro; de salario y estructura del a&ntilde;o pasado (27.000 &euro; totales &minus; 13.127 &euro; variables). Es un coste fijo: no crece si generás más MQLs. Queda <b>fuera del presupuesto a gastar</b>, pero s&iacute; entra en el c&aacute;lculo de ROI y CAC, porque es plata real que cuesta el funnel.</p>
+              <p><b>Estructura anual</b> &mdash; los 13.873 &euro; de salario y estructura del a&ntilde;o pasado (27.000 &euro; totales &minus; 13.127 &euro; variables). Es un coste fijo: no crece si generás más MQLs. Queda <b>fuera del presupuesto a gastar</b>, pero s&iacute; entra en el c&aacute;lculo de ROI y CAC, igual que la reserva de conversi&oacute;n, porque es plata real que cuesta el funnel.</p>
               <p><b>Las tres tasas</b> son los saltos del funnel. Multiplicadas dan la conversi&oacute;n de punta a punta:</p>
               <span class="f">MQL&rarr;Cliente = MQL&rarr;SQL &times; SQL&rarr;Opp &times; Opp&rarr;Won<br><em>2025: 7,1 % &times; 15,4 % = 1,10 %</em></span>
               <p><b>El paso de SQL</b> &mdash; el filtro entre lo que marketing entrega y lo que ventas acepta trabajar &mdash; <b>no se midi&oacute; en 2025</b>. De ese a&ntilde;o sabemos que de 182 MQLs salieron 13 oportunidades, o sea un <b>7,1 % de punta a punta</b>, pero no en qu&eacute; salto se perdi&oacute; el resto. Por eso las dos tasas vienen precargadas de modo que <b>su producto d&eacute; exactamente esa cifra</b>: el modelo no cambia de resultado, s&oacute;lo muestra el paso intermedio. En cuanto tengas el dato real de SQLs, mové los dos sliders y todo se recalcula.</p>
@@ -552,7 +552,7 @@
 
   <!-- ================= PANEL: CALCULADORA DE ROAS ================= -->
   <div data-panel="roas" hidden>
-    <p class="presetnote" style="margin-top:22px">Al rev&eacute;s que el planificador: en vez de partir del objetivo de facturaci&oacute;n, part&iacute;s del <b>retorno que quer&eacute;s sacarle a cada euro invertido</b> y la herramienta te dice cu&aacute;nto habr&iacute;a que facturar y si el funnel da para tanto.</p>
+    <p class="presetnote" style="margin-top:22px">Al rev&eacute;s que el planificador: en vez de partir del objetivo de facturaci&oacute;n, part&iacute;s del <b>retorno que quer&eacute;s sacarle a cada euro invertido</b> y la herramienta te dice qu&eacute; esperar: cu&aacute;nto facturar, cu&aacute;ntos clientes, oportunidades, SQLs y MQLs, cu&aacute;nto se gasta de verdad y qu&eacute; pasa si la conversi&oacute;n no mejora.</p>
 
     <div class="grid">
 
@@ -565,13 +565,13 @@
               <div class="head"><label for="roas">ROAS objetivo</label><span class="val" id="roasv"></span></div>
               <div class="txtfield"><input type="number" id="roas" step="0.1" min="0.1"><span style="color:var(--muted)">x</span></div>
               <input type="range" id="roasR" min="0.5" max="10" step="0.1" style="margin-top:10px">
-              <div class="base">Euros facturados por cada euro invertido. 2025 cerr&oacute; en <b>1,04x</b> sobre inversi&oacute;n total y <b>2,15x</b> sobre medios.</div>
+              <div class="base">Euros facturados por cada euro invertido. 2025 cerr&oacute; en <b>1,04x</b> sobre inversi&oacute;n total y <b>2,15x</b> sobre la parte variable.</div>
             </div>
 
             <div class="field">
               <div class="head"><label>Sobre qu&eacute; inversi&oacute;n se mide</label></div>
               <div class="segmented" id="roasBase">
-                <button data-base="media" type="button">S&oacute;lo medios</button>
+                <button data-base="media" type="button">Presupuesto variable</button>
                 <button data-base="total" type="button">Medios + estructura</button>
               </div>
               <div class="base" id="roasBaseNote"></div>
@@ -596,7 +596,8 @@
                 <span class="f">ROAS = facturaci&oacute;n &divide; inversi&oacute;n<br><em>2025: 28.200 &euro; &divide; 27.000 &euro; = 1,04x</em></span>
                 <p>La calculadora da vuelta la f&oacute;rmula: fij&aacute;s el ROAS y sale la facturaci&oacute;n.</p>
                 <span class="f">facturaci&oacute;n = ROAS &times; inversi&oacute;n</span>
-                <p><b>Cuidado con la base.</b> El mismo a&ntilde;o da 1,04x o 2,15x seg&uacute;n qu&eacute; metas en el denominador. <b>S&oacute;lo medios</b> mide la eficacia de la pauta; <b>medios + estructura</b> mide si el &aacute;rea se paga sola. Para comprometer un n&uacute;mero con direcci&oacute;n, us&aacute; el segundo.</p>
+                <p><b>Cuidado con la base.</b> El mismo a&ntilde;o da 1,04x o 2,15x seg&uacute;n qu&eacute; metas en el denominador. <b>Presupuesto variable</b> (medios + reserva) mide la eficacia de la pauta; <b>medios + estructura</b> mide si el &aacute;rea se paga sola. Para comprometer un n&uacute;mero con direcci&oacute;n, us&aacute; el segundo.</p>
+                <p><b>Ojo:</b> el funnel no gasta todo el presupuesto, gasta lo que cuestan los MQLs que hacen falta. Por eso el <b>ROAS real</b> (sobre lo que se gasta) suele ser m&aacute;s alto que el que escrib&iacute;s (sobre lo que ten&eacute;s disponible).</p>
                 <p>Y algo que el ROAS no dice: es <b>facturaci&oacute;n, no margen</b>. Un ROAS de 3x sobre proyectos con 30 % de margen deja menos plata que un 2x sobre proyectos con 60 %. Sirve para dimensionar el funnel, no para decidir rentabilidad.</p>
               </div>
             </details>
@@ -622,10 +623,11 @@
         </div>
 
         <section class="card">
-          <h2>&iquest;El funnel da para tanto?</h2>
+          <h2>Qu&eacute; esperar con este ROAS</h2>
           <div class="body">
             <div id="roasBand" class="bband"></div>
             <div class="bstats" id="roasStats"></div>
+            <div class="bstats" id="roasSpend"></div>
             <p class="note" id="roasNote"></p>
 
             <details class="how">
@@ -636,6 +638,25 @@
                 <p>Y ese n&uacute;mero de MQLs se compara contra los que el presupuesto puede pagar:</p>
                 <span class="f">MQLs que compra = ( presupuesto &minus; reserva ) &divide; coste por MQL</span>
                 <p>Si los MQLs que hacen falta entran en los que compr&aacute;s, el ROAS es alcanzable con lo que ya asumiste. Si no, hay que mover una de las tres palancas de abajo.</p>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Y si la conversi&oacute;n no mejora</h2>
+          <div class="body">
+            <table>
+              <thead><tr><th>Conversi&oacute;n</th><th>MQL&rarr;Cliente</th><th>Clientes</th><th>Facturaci&oacute;n</th><th>ROAS</th><th>&iquest;Llega?</th></tr></thead>
+              <tbody id="roasScen"></tbody>
+            </table>
+            <p class="note" id="roasScenNote"></p>
+            <details class="how">
+              <summary>C&oacute;mo se calcula</summary>
+              <div class="inner">
+                <p>Es lo que pasa si gast&aacute;s <b>todo</b> el presupuesto y la conversi&oacute;n de punta a punta sale distinta de la del plan. Ticket y coste por MQL quedan fijos.</p>
+                <span class="f">clientes = piso( MQLs que compra &times; MQL&rarr;Cliente )<br>facturaci&oacute;n = clientes &times; ticket<br>ROAS = facturaci&oacute;n &divide; inversi&oacute;n de la base elegida</span>
+                <p><b>Como 2025</b> usa 2 clientes sobre 182 MQLs (1,1 %). <b>A mitad de camino</b> es el promedio entre esa y la del plan. Con 2 cierres de muestra, la de 2025 tiene un margen de error enorme: tomala como piso, no como pron&oacute;stico.</p>
               </div>
             </details>
           </div>
@@ -895,15 +916,15 @@ function calc(){
     revenue:revenue, clients:clients, rA:rA, rB:rB, r1:r1, r2:r2,
     opps:Math.ceil(opps), sqls:Math.ceil(sqls), mqls:Math.ceil(mqls),
     mediaSpend:mediaSpend,
-    invest: mediaSpend + S.fixed,
+    invest: mediaSpend + S.reserve + S.fixed,   /* medios + reserva + estructura */
     media:media, affordable:Math.floor(affordable),
     committed:committed,
     over: committed - S.budget,
     slack: Math.floor(affordable) - Math.ceil(mqls),
     minRate: affordable > 0 ? clients/affordable : 0,
     maxClients: Math.floor(affordable * r1 * r2),
-    roi: (mediaSpend + S.fixed) ? revenue/(mediaSpend + S.fixed) : 0,
-    cac: clients ? (mediaSpend + S.fixed)/clients : 0,
+    roi: (mediaSpend + S.reserve + S.fixed) ? revenue/(mediaSpend + S.reserve + S.fixed) : 0,
+    cac: clients ? (mediaSpend + S.reserve + S.fixed)/clients : 0,
     cacVar: (r1*r2) ? cpm/(r1*r2) : 0,
     ticket: clients ? revenue/clients : 0,
     perMonth: mqls/12,
@@ -993,7 +1014,7 @@ function renderKpis(c){
     el.innerHTML = d;
     el.className = "d num" + (cls ? " " + cls : "");
   }
-  set("kInv", eurK(c.invest), eur(c.mediaSpend) + " medios + " + eur(S.fixed) + " estructura");
+  set("kInv", eurK(c.invest), eur(c.mediaSpend) + " medios + " + eur(S.reserve) + " reserva + " + eur(S.fixed) + " estructura");
   set("kRoi", mult(c.roi), "2025: " + mult(B.roi), c.roi > B.roi ? "up" : "dn");
   set("kCac", eur(c.cac), "2025: " + eur(B.cac), c.cac < B.cac ? "up" : "dn");
   set("kTkt", eurK(c.ticket), "2025: " + eurK(B.ticket), c.ticket > B.ticket ? "up" : "dn");
@@ -1153,7 +1174,7 @@ function renderSens(c){
    Va al reves que el planificador: parte del retorno buscado
    y baja hasta los MQLs que harian falta para sostenerlo.      */
 function roasCalc(c){
-  var media  = S.budget;
+  var media  = S.budget;                       /* variable: medios + reserva, comparable con los 13.127 € de 2025 */
   var base   = S.roasBase === "total" ? media + S.fixed : media;
   var goal   = S.roas * base;
   var ticket = c.ticket || B.ticket;
@@ -1167,6 +1188,26 @@ function roasCalc(c){
 
   var maxRevenue = c.maxClients * ticket;
 
+  /* lo que realmente se gasta para producir esos clientes: no es el presupuesto entero */
+  var spendMedia = Math.ceil(mqlsNeed) * S.cpm;
+  var spendVar   = spendMedia + Math.min(S.reserve, S.budget);
+  var spendBase  = spendVar + (S.roasBase === "total" ? S.fixed : 0);
+  var delivered  = clientsNeed * ticket;
+
+  /* que pasa si se gasta TODO el presupuesto con distintas conversiones de punta a punta */
+  var conv25 = B.clients/B.mqls, convPlan = c.r1*c.r2;
+  function scen(label, conv){
+    var cl  = Math.floor(c.affordable * conv);
+    var rev = cl * ticket;
+    return { label:label, conv:conv, mqls:c.affordable, clients:cl, revenue:rev,
+             roas: base ? rev/base : 0,
+             needMqls: conv ? Math.ceil(clientsNeed/conv) : 0,
+             reaches: base ? rev/base >= S.roas : false };
+  }
+  var scens = [ scen("Como 2025", conv25),
+                scen("A mitad de camino", (conv25 + convPlan)/2),
+                scen("La del plan", convPlan) ];
+
   return {
     media:media, base:base, goal:goal, ticket:ticket,
     clientsNeed:clientsNeed, oppsNeed:Math.ceil(oppsNeed),
@@ -1179,7 +1220,13 @@ function roasCalc(c){
     ticketNeed:  c.maxClients ? goal/c.maxClients : 0,
     rateNeed:    c.affordable ? clientsNeed/c.affordable : 0,
     budgetNeed:  Math.ceil(mqlsNeed)*S.cpm + S.reserve,
-    curRate: c.r1*c.r2
+    curRate: c.r1*c.r2,
+    spendMedia:spendMedia, spendVar:spendVar, spendBase:spendBase, delivered:delivered,
+    unused: S.budget - spendVar,
+    realRoas: spendBase ? delivered/spendBase : 0,
+    cac: clientsNeed ? spendBase/clientsNeed : 0,
+    perMonth: Math.ceil(mqlsNeed)/c.sellingMonths,
+    scens:scens
   };
 }
 
@@ -1191,10 +1238,10 @@ function renderRoas(c){
     b.classList.toggle("on", b.getAttribute("data-base") === S.roasBase);
   });
   document.getElementById("roasBaseNote").innerHTML = S.roasBase === "total"
-    ? "Presupuesto <b>" + eur(S.budget) + "</b> + estructura <b>" + eur(S.fixed) + "</b> = <b>" +
+    ? "Presupuesto variable <b>" + eur(S.budget) + "</b> + estructura <b>" + eur(S.fixed) + "</b> = <b>" +
       eur(r.base) + "</b>. Es el ROAS que le podés mostrar a dirección."
-    : "S&oacute;lo el presupuesto de medios: <b>" + eur(r.base) +
-      "</b>. Mide la eficacia de la pauta, deja la estructura afuera.";
+    : "S&oacute;lo el presupuesto variable (medios + reserva): <b>" + eur(r.base) +
+      "</b>. Es la misma base de los 13.127 &euro; de 2025. Deja la estructura afuera.";
 
   /* --- cifra grande --- */
   document.getElementById("roasRevenue").textContent = eur(r.goal);
@@ -1229,9 +1276,8 @@ function renderRoas(c){
     {k:"MQLs necesarios", v:group(r.mqlsNeed),
      s:"a " + pct(c.rA) + " de MQL a SQL",
      cls:r.fits ? "good" : "bad"},
-    {k:"ROAS m&aacute;ximo hoy", v:roasFmt(r.maxRoas),
-     s:group(r.maxClients) + " clientes × " + eur(r.ticket) + " ÷ " + eur(r.base),
-     cls:r.maxRoas >= S.roas ? "good" : "warn"}
+    {k:"MQLs por mes", v:group(Math.ceil(r.perMonth)),
+     s:"concentrados en " + c.sellingMonths + " meses (ciclo de " + S.cycle + ")"}
   ];
   document.getElementById("roasStats").className = "bstats five";
   document.getElementById("roasStats").innerHTML = stats.map(function(x){
@@ -1239,6 +1285,42 @@ function renderRoas(c){
       '<div class="v' + (x.cls ? " " + x.cls : "") + '">' + x.v + '</div>' +
       '<div class="s">' + x.s + '</div></div>';
   }).join("");
+
+  /* --- lo que realmente se gasta y se cobra --- */
+  var spend = [
+    {k:"Gasto real necesario", v:eur(r.spendBase),
+     s:eur(r.spendMedia) + " medios + " + eur(Math.min(S.reserve, S.budget)) + " reserva" +
+       (S.roasBase === "total" ? " + " + eur(S.fixed) + " estructura" : "")},
+    {k:"Presupuesto sin usar", v:eur(Math.max(0, r.unused)),
+     s:r.unused >= 0 ? "de " + eur(S.budget) + " disponibles" : "te falta plata",
+     cls:r.unused >= 0 ? "" : "bad"},
+    {k:"Facturaci&oacute;n que entrega", v:eur(r.delivered),
+     s:group(r.clientsNeed) + " clientes &times; " + eur(r.ticket) + " (se redondea a clientes enteros)"},
+    {k:"ROAS real", v:roasFmt(r.realRoas),
+     s:eur(r.delivered) + " &divide; " + eur(r.spendBase) + " gastados &middot; pediste " + roasFmt(S.roas),
+     cls:r.realRoas >= S.roas ? "good" : "warn"},
+    {k:"CAC", v:eur(r.cac), s:"2025: " + eur(S.roasBase === "total" ? B.cac : B.investVar/B.clients)}
+  ];
+  document.getElementById("roasSpend").className = "bstats five";
+  document.getElementById("roasSpend").innerHTML = spend.map(function(x){
+    return '<div class="bstat"><div class="k">' + x.k + '</div>' +
+      '<div class="v' + (x.cls ? " " + x.cls : "") + '">' + x.v + '</div>' +
+      '<div class="s">' + x.s + '</div></div>';
+  }).join("");
+
+  document.getElementById("roasScen").innerHTML = r.scens.map(function(x){
+    var cls = x.reaches ? "g" : x.roas >= S.roas*0.7 ? "w" : "b";
+    var txt = x.reaches ? "llega" : x.roas >= S.roas*0.7 ? "casi" : "no llega";
+    return '<tr><td>' + x.label + '</td><td>' + pct(x.conv) + '</td><td>' + group(x.clients) +
+      '</td><td>' + eur(x.revenue) + '</td><td>' + roasFmt(x.roas) + '</td>' +
+      '<td><span class="pill ' + cls + '">' + txt + '</span></td></tr>';
+  }).join("");
+  document.getElementById("roasScenNote").innerHTML =
+    "Gastando <b>todo</b> el presupuesto (" + group(r.affordable) + " MQLs). Para el ROAS de <b>" + roasFmt(S.roas) +
+    "</b> hacen falta <b>" + group(r.clientsNeed) + " clientes</b>: con la conversi&oacute;n de 2025 (" + pct(B.clients/B.mqls) +
+    ") eso pide <b>" + group(r.scens[0].needMqls) + " MQLs</b>, con la del plan (" + pct(r.curRate) + ") pide <b>" +
+    group(r.mqlsNeed) + "</b>. La conversi&oacute;n del plan es " + mult(r.curRate/(B.clients/B.mqls)) +
+    " la de 2025 y <b>todav&iacute;a no est&aacute; demostrada</b>: es lo que hay que ganar con la reserva.";
 
   document.getElementById("roasNote").innerHTML =
     "Con " + eur(S.budget) + " de presupuesto, " + eur(S.reserve) + " de reserva y las tasas actuales, " +
