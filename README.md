@@ -143,7 +143,7 @@ MQLs        = clientes / (MQL→SQL × SQL→Opp × Opp→Won)
 queda       = presupuesto total − MQLs × coste por MQL
 ```
 
-Muestra clientes, oportunidades, SQLs, MQLs, MQLs por mes, cuánto del presupuesto se va en MQLs y cuánto
+Clientes, oportunidades, SQLs y MQLs son **editables**: salen por defecto del ROAS, pero si escribís una cifra en cualquiera, las demás se recalculan con las tasas y el ROAS pasa a ser el resultado (un enlace vuelve al cálculo desde el ROAS). Muestra además MQLs por mes, cuánto del presupuesto se va en MQLs y cuánto
 queda para salarios. Hay un techo de ROAS = ticket ÷ coste en MQLs por cliente que ningún presupuesto
 supera. Un bloque aparte repite el cálculo con la conversión de 2025, a mitad de camino y la del plan.
 

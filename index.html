@@ -272,6 +272,14 @@
   .sens tr.cur td{box-shadow:inset 0 0 0 1.5px var(--ink)}
   .sens td.pick{outline:2px solid var(--ink);outline-offset:-2px}
 
+  .bstat input.sv{font:inherit;font-size:19px;font-weight:650;letter-spacing:-.015em;font-variant-numeric:tabular-nums;width:100%;
+    margin-top:4px;padding:0 0 1px;border:0;border-bottom:1px dashed var(--line);background:transparent;color:var(--ink);border-radius:0;outline:0}
+  .bstat input.sv:hover{border-bottom-color:var(--muted)}
+  .bstat input.sv:focus{border-bottom:1px solid var(--ink)}
+  .bstat input.sv.good{color:var(--good)}
+  .bstat input.sv.bad{color:var(--bad)}
+  .bstat input.sv.fixed{border-bottom:1.5px solid var(--ink)}
+  .note a{color:var(--ink);cursor:pointer}
   .note{font-size:12px;color:var(--muted);margin:13px 0 0;line-height:1.6}
   .note b{color:var(--ink-2);font-weight:600}
   footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
@@ -615,6 +623,7 @@
           <h2>Qu&eacute; esperar con este ROAS</h2>
           <div class="body">
             <div id="roasBand" class="bband"></div>
+            <p class="note" id="roasAnchor" style="margin:12px 0 0"></p>
             <div class="bstats" id="roasStats"></div>
             <div class="bstats" id="roasSpend"></div>
             <p class="note" id="roasNote"></p>
@@ -758,6 +767,7 @@ var DEFAULTS = {
 /* v3: el funnel gano el paso de SQL, asi que la tasa MQL→Opp se parte en dos */
 var KEY = "funnel-planner-v5", KEY_OLD = null;   /* v5: 80k totales, sin estructura ni reserva aparte */
 var S = load();
+var anchor = null;     /* cifra del funnel fijada a mano: {k:"mqls"|"sqls"|"opps"|"clients", v:n} */
 
 function clone(o){ return JSON.parse(JSON.stringify(o)); }
 
@@ -1148,10 +1158,20 @@ function roasCalc(c){
   var m      = conv ? S.cpm/conv : 0;                 /* coste en MQLs por cliente */
   var ceilRoas = m ? ticket/m : 0;                    /* techo: ticket / coste por cliente */
 
-  var clientsNeed = ticket ? Math.ceil(goal/ticket - 1e-9) : 0;
-  var oppsNeed    = clientsNeed/c.r2;
-  var sqlsNeed    = oppsNeed/c.rB;
-  var mqlsNeed    = Math.ceil(sqlsNeed/c.rA);
+  /* las cuatro etapas: desde el ROAS, o desde la cifra que se fijo a mano */
+  var clientsNeed, oppsNeed, sqlsNeed, mqlsNeed, a = anchor;
+  if(a){
+    if(a.k === "mqls"){ mqlsNeed = a.v; sqlsNeed = Math.round(mqlsNeed*c.rA); oppsNeed = Math.round(sqlsNeed*c.rB); clientsNeed = Math.round(oppsNeed*c.r2); }
+    else if(a.k === "sqls"){ sqlsNeed = a.v; mqlsNeed = c.rA ? Math.ceil(sqlsNeed/c.rA) : 0; oppsNeed = Math.round(sqlsNeed*c.rB); clientsNeed = Math.round(oppsNeed*c.r2); }
+    else if(a.k === "opps"){ oppsNeed = a.v; sqlsNeed = c.rB ? Math.ceil(oppsNeed/c.rB) : 0; mqlsNeed = c.rA ? Math.ceil(sqlsNeed/c.rA) : 0; clientsNeed = Math.round(oppsNeed*c.r2); }
+    else { clientsNeed = a.v; oppsNeed = c.r2 ? Math.ceil(clientsNeed/c.r2) : 0; sqlsNeed = c.rB ? Math.ceil(oppsNeed/c.rB) : 0; mqlsNeed = c.rA ? Math.ceil(sqlsNeed/c.rA) : 0; }
+    goal = clientsNeed*ticket;
+  }else{
+    clientsNeed = ticket ? Math.ceil(goal/ticket - 1e-9) : 0;
+    oppsNeed    = Math.ceil(clientsNeed/c.r2);
+    sqlsNeed    = Math.ceil(clientsNeed/c.r2/c.rB);
+    mqlsNeed    = Math.ceil(clientsNeed/c.r2/c.rB/c.rA);
+  }
   var spendMedia  = mqlsNeed*S.cpm;
   var delivered   = clientsNeed*ticket;
 
@@ -1163,7 +1183,7 @@ function roasCalc(c){
 
   return {
     P:P, ticket:ticket, goal:goal, m:m, ceilRoas:ceilRoas,
-    clientsNeed:clientsNeed, oppsNeed:Math.ceil(oppsNeed), sqlsNeed:Math.ceil(sqlsNeed), mqlsNeed:mqlsNeed,
+    clientsNeed:clientsNeed, oppsNeed:oppsNeed, sqlsNeed:sqlsNeed, mqlsNeed:mqlsNeed, anchored:!!a,
     spendMedia:spendMedia, left:P - spendMedia, delivered:delivered,
     fits: spendMedia <= P,
     realRoas: P ? delivered/P : 0,
@@ -1179,6 +1199,42 @@ function roasCalc(c){
   };
 }
 
+var stagesBuilt = false;
+function renderStageCards(r, c){
+  var host = document.getElementById("roasStats");
+  var defs = [
+    {id:"clients", k:"Clientes",      v:r.clientsNeed, s:eur(r.goal) + " ÷ " + eur(r.ticket) + " de ticket"},
+    {id:"opps",    k:"Oportunidades", v:r.oppsNeed,    s:"a " + pct(c.r2) + " de cierre"},
+    {id:"sqls",    k:"SQLs",          v:r.sqlsNeed,    s:"a " + pct(c.rB) + " de reunión a oportunidad"},
+    {id:"mqls",    k:"MQLs",          v:r.mqlsNeed,    s:"a " + pct(c.rA) + " de MQL a SQL", cls:r.fits ? "good" : "bad"}
+  ];
+  if(!stagesBuilt){
+    host.className = "bstats five";
+    host.innerHTML = defs.map(function(d){
+      return '<div class="bstat"><div class="k">' + d.k + '</div>' +
+        '<input class="sv" type="number" min="0" step="1" id="st-' + d.id + '" aria-label="' + d.k + ' (editable)" title="Editable">' +
+        '<div class="s" id="st-' + d.id + '-s"></div></div>';
+    }).join("") +
+      '<div class="bstat"><div class="k">MQLs por mes</div><div class="v" id="st-pm"></div><div class="s" id="st-pm-s"></div></div>';
+    defs.forEach(function(d){
+      document.getElementById("st-" + d.id).oninput = function(){
+        if(this.value === "") return;
+        anchor = {k:d.id, v:Math.max(0, Math.floor(+this.value || 0))};
+        render({keepMix:true});
+      };
+    });
+    stagesBuilt = true;
+  }
+  defs.forEach(function(d){
+    var el = document.getElementById("st-" + d.id);
+    if(document.activeElement !== el) el.value = d.v;
+    el.className = "sv" + (d.cls ? " " + d.cls : "") + (anchor && anchor.k === d.id ? " fixed" : "");
+    document.getElementById("st-" + d.id + "-s").innerHTML = d.s;
+  });
+  document.getElementById("st-pm").textContent = group(Math.ceil(r.perMonth));
+  document.getElementById("st-pm-s").innerHTML = "en " + c.sellingMonths + " meses (ciclo de " + S.cycle + ")";
+}
+
 function renderRoas(c){
   var r = roasCalc(c), dash = "&mdash;";
   function stat(x){
@@ -1189,9 +1245,11 @@ function renderRoas(c){
 
   /* --- cifra grande y veredicto --- */
   document.getElementById("roasRevenue").textContent = eur(r.goal);
-  document.getElementById("roasEq").innerHTML =
-    "facturaci&oacute;n = ROAS &times; presupuesto<br>" +
-    "<em>" + roasFmt(S.roas) + " &times; " + eur(r.P) + " = " + eur(r.goal) + "</em>";
+  document.getElementById("roasEq").innerHTML = r.anchored
+    ? "facturaci&oacute;n = clientes &times; ticket<br><em>" + group(r.clientsNeed) + " &times; " + eur(r.ticket) + " = " + eur(r.goal) +
+      "</em><br>ROAS resultante = <em>" + eur(r.goal) + " &divide; " + eur(r.P) + " = " + roasFmt(r.realRoas) + "</em>"
+    : "facturaci&oacute;n = ROAS &times; presupuesto<br>" +
+      "<em>" + roasFmt(S.roas) + " &times; " + eur(r.P) + " = " + eur(r.goal) + "</em>";
 
   var band = document.getElementById("roasBand"), ratio = r.P ? r.spendMedia/r.P : 0;
   if(!r.fits){
@@ -1209,14 +1267,15 @@ function renderRoas(c){
   }
 
   /* --- desglose --- */
-  document.getElementById("roasStats").className = "bstats five";
-  document.getElementById("roasStats").innerHTML = [
-    {k:"Clientes", v:group(r.clientsNeed), s:eur(r.goal) + " ÷ " + eur(r.ticket) + " de ticket"},
-    {k:"Oportunidades", v:group(r.oppsNeed), s:"a " + pct(c.r2) + " de cierre"},
-    {k:"SQLs", v:group(r.sqlsNeed), s:"a " + pct(c.rB) + " de reunión a oportunidad"},
-    {k:"MQLs", v:group(r.mqlsNeed), s:"a " + pct(c.rA) + " de MQL a SQL", cls:r.fits ? "good" : "bad"},
-    {k:"MQLs por mes", v:group(Math.ceil(r.perMonth)), s:"en " + c.sellingMonths + " meses (ciclo de " + S.cycle + ")"}
-  ].map(stat).join("");
+  var an = document.getElementById("roasAnchor");
+  an.innerHTML = r.anchored
+    ? "Fijaste <b>" + ({mqls:"los MQLs",sqls:"los SQLs",opps:"las oportunidades",clients:"los clientes"})[anchor.k] +
+      "</b> a mano: las otras etapas se recalculan con las tasas y el ROAS sale <b>" + roasFmt(r.realRoas) + "</b>. " +
+      '<a id="anchorReset">Volver a calcular desde el ROAS</a>'
+    : "Tocá cualquier cifra del funnel para fijarla a mano; las otras se recalculan con las tasas de arriba.";
+  var rst = document.getElementById("anchorReset");
+  if(rst) rst.onclick = function(){ anchor = null; render({keepMix:true}); };
+  renderStageCards(r, c);
 
   document.getElementById("roasSpend").className = "bstats five";
   document.getElementById("roasSpend").innerHTML = [
@@ -1224,8 +1283,8 @@ function renderRoas(c){
     {k:"Queda", v:eur(Math.max(0, r.left)), s:"para salarios y el resto de " + eur(r.P),
      cls:r.left < 0 ? "bad" : ratio > 0.7 ? "warn" : "good"},
     {k:"Facturación", v:eur(r.delivered), s:"clientes enteros × ticket"},
-    {k:"ROAS real", v:roasFmt(r.realRoas), s:eur(r.delivered) + " ÷ " + eur(r.P) + " · pediste " + roasFmt(S.roas),
-     cls:r.realRoas >= S.roas*0.97 ? "good" : "warn"},
+    {k:"ROAS real", v:roasFmt(r.realRoas), s:eur(r.delivered) + " ÷ " + eur(r.P) + (r.anchored ? "" : " · pediste " + roasFmt(S.roas)),
+     cls:(r.anchored || r.realRoas >= S.roas*0.97) ? "good" : "warn"},
     {k:"CAC", v:eur(r.cac), s:eur(r.P) + " ÷ " + group(r.clientsNeed) + " clientes · 2025: " + eur(B.cac)}
   ].map(stat).join("");
 
@@ -1406,7 +1465,7 @@ document.getElementById("budgetR").oninput = function(){ setBudget(+this.value);
   };
 });
 document.getElementById("reset").onclick = function(){
-  var tab = S.tab;
+  var tab = S.tab; anchor = null;
   S = clone(DEFAULTS); S.tab = tab; save(); syncInputs(); render();
 };
 
@@ -1415,6 +1474,7 @@ document.getElementById("reset").onclick = function(){
 
 /* ================== controles de la calculadora ================== */
 function setRoas(v){
+  anchor = null;
   S.roas = Math.max(0.1, Math.min(50, v || 0.1));
   save(); syncInputs(); render({keepMix:true});
 }
