@@ -3,7 +3,7 @@
 Herramienta interactiva para dimensionar el funnel de marketing necesario para un objetivo de
 facturación anual. Ponés el objetivo y el presupuesto, y te devuelve el mix de servicios
 recomendado más los MQLs, SQLs, oportunidades y clientes que hacen falta, con inversión, ROI y CAC.
-La segunda pestaña hace la cuenta inversa: partís de un ROAS y te dice cuánto habría que
+Todo está en una sola página: abajo del planificador, la calculadora de ROAS hace la cuenta inversa: partís de un ROAS y te dice cuánto habría que
 facturar y si el funnel da para tanto.
 
 **En vivo:** https://facubelini.github.io/funnel-planner/
@@ -141,7 +141,9 @@ hasta 2,2x, ámbar hasta 4x, rojo por encima. Sirve para ver que bajar una fila 
 ahorra muchos más MQLs que correrse una columna (mejor cierre) — y arreglar la cualificación es más
 barato y más rápido.
 
-## Calculadora de ROAS (segunda pestaña)
+## Calculadora de ROAS (misma página, debajo del planificador)
+
+Las métricas siguen la definición del área: **ROAS** = facturación ÷ inversión, **ROI** = (facturación − inversión) ÷ inversión, **CAC** = inversión ÷ clientes, cada una sobre inversión total y sin salario.
 
 El planificador parte del objetivo de facturación. La calculadora va al revés: partís del **retorno
 que querés sacarle a cada euro invertido** y sale cuánto habría que facturar.

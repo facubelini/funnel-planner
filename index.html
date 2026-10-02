@@ -57,6 +57,7 @@
   .presetnote b{color:var(--ink-2);font-weight:600}
 
   /* ---------- tabs ---------- */
+  .sect{font-size:22px;font-weight:680;letter-spacing:-.02em;margin:54px 0 0;padding-top:26px;border-top:1px solid var(--line)}
   .tabs{display:flex;gap:26px;margin:26px 0 -23px}
   .tab{
     appearance:none;border:0;background:none;padding:0 0 12px;font:inherit;font-size:13.5px;
@@ -201,7 +202,7 @@
   .btn.ghost:hover{border-color:#c9c9c2;color:var(--ink);opacity:1}
 
   /* ---------- KPIs ---------- */
-  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-2);border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line-2);border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
   @media (max-width:720px){.kpis{grid-template-columns:1fr 1fr}}
   .kpi{background:var(--surface);padding:16px 17px}
   .kpi .k{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:650}
@@ -285,13 +286,23 @@
     <div class="eyebrow">Marketing &middot; Planificaci&oacute;n anual</div>
     <h1>Planificador de funnel</h1>
     <p class="sub">Pon&eacute; el <b>objetivo de facturaci&oacute;n</b> y el <b>presupuesto</b>, y la herramienta te devuelve el mix de servicios recomendado y los <b>MQLs</b>, <b>SQLs</b>, <b>oportunidades</b> y <b>clientes</b> que hacen falta. Todo arranca de la base real de <b>2025</b>: 182 MQLs &rarr; 13 oportunidades &rarr; 2 clientes &rarr; 28.200 &euro;. El paso de <b>SQL</b> no se midi&oacute; ese a&ntilde;o, as&iacute; que se reparte con dos tasas editables cuyo producto es la conversi&oacute;n real.</p>
-    <nav class="tabs" id="tabs">
-      <button class="tab on" data-tab="plan">Planificador</button>
-      <button class="tab" data-tab="roas">Calculadora de ROAS</button>
-    </nav>
   </header>
 
   <div data-panel="plan">
+
+  <section class="card" style="margin-top:22px">
+    <h2>Base 2025</h2>
+    <div class="body">
+      <table>
+        <thead><tr><th></th><th>Inversi&oacute;n</th><th>ROAS</th><th>ROI</th><th>CAC</th></tr></thead>
+        <tbody>
+          <tr><td>Sobre inversi&oacute;n total</td><td id="b25t"></td><td id="b25tr"></td><td id="b25ti"></td><td id="b25tc"></td></tr>
+          <tr><td>Sobre inversi&oacute;n sin salario</td><td id="b25v"></td><td id="b25vr"></td><td id="b25vi"></td><td id="b25vc"></td></tr>
+        </tbody>
+      </table>
+      <p class="note">182 MQLs &rarr; 13 oportunidades &rarr; 2 clientes won por 28.200 &euro;. ROAS = facturaci&oacute;n &divide; inversi&oacute;n. ROI = (facturaci&oacute;n &minus; inversi&oacute;n) &divide; inversi&oacute;n. CAC = inversi&oacute;n &divide; clientes. El SQL no figura en esta base: no se midi&oacute;.</p>
+    </div>
+  </section>
 
   <div class="presets" id="presets"><span class="lbl">Escenarios</span></div>
   <p class="presetnote">Los escenarios se recalculan solos para el objetivo que pongas: cambian el reparto entre servicios, no la cifra a facturar.</p>
@@ -424,6 +435,11 @@
           <div class="d num" id="kInvD"></div>
         </div>
         <div class="kpi">
+          <div class="k">ROAS</div>
+          <div class="v num" id="kRoas">&mdash;</div>
+          <div class="d num" id="kRoasD"></div>
+        </div>
+        <div class="kpi">
           <div class="k">ROI</div>
           <div class="v num" id="kRoi">&mdash;</div>
           <div class="d num" id="kRoiD"></div>
@@ -551,7 +567,8 @@
   </div><!-- /panel plan -->
 
   <!-- ================= PANEL: CALCULADORA DE ROAS ================= -->
-  <div data-panel="roas" hidden>
+  <div data-panel="roas">
+    <h2 class="sect">Calculadora de ROAS</h2>
     <p class="presetnote" style="margin-top:22px">Al rev&eacute;s que el planificador: en vez de partir del objetivo de facturaci&oacute;n, part&iacute;s del <b>retorno que quer&eacute;s sacarle a cada euro invertido</b> y la herramienta te dice qu&eacute; esperar: cu&aacute;nto facturar, cu&aacute;ntos clientes, oportunidades, SQLs y MQLs, cu&aacute;nto se gasta de verdad y qu&eacute; pasa si la conversi&oacute;n no mejora.</p>
 
     <div class="grid">
@@ -823,6 +840,7 @@ function group(n){
 function eur(n){ return group(n) + " €"; }
 function eurK(n){ return n >= 10000 ? group(n/1000) + "k €" : eur(n); }
 function pct(n){ return nf.format(Math.round(n*1000)/10) + " %"; }
+function pct2(n){ return (Math.round(n*10000)/100).toFixed(2).replace(".", ",") + " %"; }
 function mult(n){ return (n < 10 ? n.toFixed(2) : n.toFixed(1)).replace(".", ",") + "x"; }
 /* el ROAS se escribe corto: 3x, 2,5x — no 3,00x */
 function roasFmt(n){
@@ -923,7 +941,8 @@ function calc(){
     slack: Math.floor(affordable) - Math.ceil(mqls),
     minRate: affordable > 0 ? clients/affordable : 0,
     maxClients: Math.floor(affordable * r1 * r2),
-    roi: (mediaSpend + S.reserve + S.fixed) ? revenue/(mediaSpend + S.reserve + S.fixed) : 0,
+    roas: (mediaSpend + S.reserve + S.fixed) ? revenue/(mediaSpend + S.reserve + S.fixed) : 0,
+    roi: (mediaSpend + S.reserve + S.fixed) ? revenue/(mediaSpend + S.reserve + S.fixed) - 1 : 0,
     cac: clients ? (mediaSpend + S.reserve + S.fixed)/clients : 0,
     cacVar: (r1*r2) ? cpm/(r1*r2) : 0,
     ticket: clients ? revenue/clients : 0,
@@ -1015,8 +1034,11 @@ function renderKpis(c){
     el.className = "d num" + (cls ? " " + cls : "");
   }
   set("kInv", eurK(c.invest), eur(c.mediaSpend) + " medios + " + eur(S.reserve) + " reserva + " + eur(S.fixed) + " estructura");
-  set("kRoi", mult(c.roi), "2025: " + mult(B.roi), c.roi > B.roi ? "up" : "dn");
-  set("kCac", eur(c.cac), "2025: " + eur(B.cac), c.cac < B.cac ? "up" : "dn");
+  var v = c.mediaSpend + S.reserve;            /* inversion sin salario: medios + reserva */
+  var vRoas = v ? c.revenue/v : 0;
+  set("kRoas", mult(c.roas), "sin salario <b>" + mult(vRoas) + "</b><br>2025: " + mult(B.roi) + " · " + mult(B.revenue/B.investVar), c.roas > B.roi ? "up" : "dn");
+  set("kRoi", pct2(c.roi), "sin salario <b>" + pct2(vRoas - 1) + "</b><br>2025: " + pct2(B.roi - 1) + " · " + pct2(B.revenue/B.investVar - 1), c.roi > 0 ? "up" : "dn");
+  set("kCac", eur(c.cac), "sin salario <b>" + eur(c.clients ? v/c.clients : 0) + "</b><br>2025: " + eur(B.cac) + " · " + eur(B.investVar/B.clients), c.cac < B.cac ? "up" : "dn");
   set("kTkt", eurK(c.ticket), "2025: " + eurK(B.ticket), c.ticket > B.ticket ? "up" : "dn");
 }
 
@@ -1457,6 +1479,11 @@ function render(opt){
 }
 
 /* ================== wiring ================== */
+(function(){
+  function t(id, v){ document.getElementById(id).textContent = v; }
+  t("b25t", eur(B.investTotal)); t("b25tr", mult(B.revenue/B.investTotal)); t("b25ti", pct2(B.revenue/B.investTotal - 1)); t("b25tc", eur(B.investTotal/B.clients));
+  t("b25v", eur(B.investVar));   t("b25vr", mult(B.revenue/B.investVar));   t("b25vi", pct2(B.revenue/B.investVar - 1));   t("b25vc", eur(B.investVar/B.clients));
+})();
 renderPresets();
 syncInputs();
 render();
@@ -1506,19 +1533,7 @@ document.getElementById("reset").onclick = function(){
 };
 
 /* ================== pestañas ================== */
-function setTab(t){
-  S.tab = t; save();
-  document.querySelectorAll("[data-panel]").forEach(function(el){
-    el.hidden = el.getAttribute("data-panel") !== t;
-  });
-  document.querySelectorAll(".tab").forEach(function(b){
-    b.classList.toggle("on", b.getAttribute("data-tab") === t);
-  });
-}
-document.querySelectorAll(".tab").forEach(function(b){
-  b.onclick = function(){ setTab(b.getAttribute("data-tab")); };
-});
-setTab(S.tab);
+
 
 /* ================== controles de la calculadora ================== */
 function setRoas(v){
@@ -1540,7 +1555,7 @@ document.querySelectorAll("#roasBase button").forEach(function(b){
 document.getElementById("useAsTarget").onclick = function(){
   var r = roasCalc(calc());
   setTarget(Math.round(r.goal/1000)*1000);
-  setTab("plan");
+  window.scrollTo({top:0, behavior:"smooth"});
 };
 document.getElementById("useMaxRoas").onclick = function(){
   var r = roasCalc(calc());
