@@ -90,24 +90,16 @@ Tocar los steppers a mano desactiva el escenario y el mix pasa a ser manual.
 
 ## La restricción de presupuesto
 
-El presupuesto (51.400 €) es dinero **libre de estructura y salarios**, y la tarjeta *Encaje en el
-presupuesto* invierte el cálculo: en vez de decirte cuánto costaría el mix, te dice qué conversión
-estás **obligado** a alcanzar para que el mix entre en el presupuesto.
+El presupuesto (**80.000 €**) es el **total, con salarios adentro**. De ahí salen la estructura
+(13.873 €, editable) y la reserva de conversión; lo que queda compra MQLs. La tarjeta *Encaje en el
+presupuesto* invierte el cálculo: te dice qué conversión estás **obligado** a alcanzar para que el mix entre.
 
 ```
-medios disponibles = presupuesto − reserva de conversión
+medios disponibles = presupuesto total − estructura − reserva de conversión
 MQLs que compra    = medios disponibles / coste por MQL
 holgura            = MQLs que compra − MQLs que necesita el mix
 conversión mínima  = clientes del mix / MQLs que compra
-techo de clientes  = MQLs que compra × MQL→SQL × SQL→Opp × Opp→Won
 ```
-
-La reserva de conversión (nurturing, SDR, cualificación, sales enablement) es el trade-off central:
-cada euro que le pasás desde medios reduce los MQLs que podés comprar y por lo tanto **sube** la
-tasa que tenés que alcanzar — pero es lo único que financia esa mejora de tasa.
-
-Los mixes de bajo ticket y alto volumen quedan fuera de presupuesto automáticamente, y la banda se
-pone en rojo indicando por cuánto se pasan.
 
 ## Escenarios precargados
 
@@ -145,57 +137,19 @@ barato y más rápido.
 
 Las métricas siguen la definición del área: **ROAS** = facturación ÷ inversión, **ROI** = (facturación − inversión) ÷ inversión, **CAC** = inversión ÷ clientes, cada una sobre inversión total y sin salario.
 
-El planificador parte del objetivo de facturación. La calculadora va al revés: partís del **retorno
-que querés sacarle a cada euro invertido** y sale cuánto habría que facturar.
+La inversión **no es un dato**: depende de cuántos clientes se cierran. Por eso se resuelve junto con la facturación:
 
 ```
-facturación = ROAS × inversión
+inversión   = fijos + clientes × (coste por MQL / conversión de punta a punta)
+facturación = clientes × ticket
+clientes    = ROAS × fijos / (ticket − ROAS × CAC variable)
 ```
 
-La inversión se puede medir de dos formas, y el mismo año da números muy distintos según cuál uses
-— 2025 fue **1,04x** sobre inversión total y **2,15x** sobre medios:
-
-| Base | Denominador | Para qué sirve |
-| --- | --- | --- |
-| Presupuesto variable | presupuesto (medios + reserva) | medir la eficacia de la pauta |
-| Medios + estructura | presupuesto + estructura anual | ver si el área se paga sola |
-
-Después baja de euros a MQLs con el ticket medio y las tasas del planificador, y compara contra lo
-que el presupuesto puede pagar:
-
-```
-clientes necesarios = techo( facturación / ticket medio del mix )
-MQLs necesarios     = clientes / (MQL→SQL × SQL→Opp × Opp→Won)
-MQLs que compra     = (presupuesto − reserva) / coste por MQL
-```
-
-Si los MQLs necesarios entran en los que compra el presupuesto, el ROAS es alcanzable sin tocar
-nada. Si no, el bloque *Qué tendría que pasar para llegar* muestra las tres salidas, cada una
-resolviendo el hueco sola:
-
-```
-ticket necesario      = facturación / clientes que paga el presupuesto
-conversión necesaria  = clientes necesarios / MQLs que compra
-presupuesto necesario = MQLs necesarios × coste por MQL + reserva
-```
-
-La más barata casi siempre es el **ticket**: mover el mix hacia servicios caros no cuesta un euro
-más de medios. El **ROAS máximo alcanzable** cierra el círculo — con el presupuesto, las tasas y el
-ticket actuales, es el techo real, y hay un botón que lo carga directamente.
-
-**Qué esperar con el ROAS que ponés.** El funnel no gasta todo el presupuesto: gasta lo que cuestan los
-MQLs que hacen falta. Por eso la calculadora separa el ROAS que pedís (sobre lo disponible) del **ROAS
-real** (sobre lo que se gasta), y muestra clientes, oportunidades, SQLs, MQLs, MQLs por mes, gasto real,
-presupuesto sin usar y CAC. Un bloque aparte responde qué pasa si se gasta todo y la conversión sale
-como la de 2025, a mitad de camino, o como la del plan.
-
-La tabla de escenarios repite la cuenta de 1x a 10x con la inversión fija. Como la inversión no se
-mueve, cada punto de ROAS suma siempre la misma facturación y pide MQLs en la misma proporción: en
-este modelo no hay economía de escala, el único atajo es el ticket medio.
-
-Las dos pestañas comparten el mismo estado: el presupuesto, las tasas y el ticket son los mismos de
-un lado y del otro, y el botón *Usar esta facturación como objetivo* lleva la cifra al planificador
-y regenera el mix para ella.
+Los fijos son la reserva (y los salarios si se mide sobre el total). Hay un **techo** de ROAS = ticket ÷
+CAC variable que ningún presupuesto supera. El gasto total (salarios incluidos) se compara contra los
+80.000 €, que son el tope. Un bloque aparte muestra qué pasa gastando todo con la conversión de 2025, a
+mitad de camino o la del plan. Se muestran clientes, oportunidades, SQLs, MQLs, MQLs por mes, gasto real
+y CAC.
 
 ## Qué se puede editar
 
@@ -209,8 +163,7 @@ y regenera el mix para ella.
 - ROAS objetivo y base de cálculo, en la segunda pestaña
 
 Cada bloque tiene un desplegable *Cómo se calcula* con las fórmulas y el criterio detrás de cada
-número. Los cambios quedan guardados en `localStorage` (`funnel-planner-v3`, que recupera lo guardado en
-`v2` menos la tasa vieja), así que la pestaña recuerda el último mix.
+número. Los cambios quedan guardados en `localStorage` (`funnel-planner-v4`), así que la pestaña recuerda el último mix.
 
 ## Stack
 
